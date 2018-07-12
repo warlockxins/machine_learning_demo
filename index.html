@@ -1,34 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <body>
+  <div>
+    <input type="file" id="files" multiple>
+    <button id="submit-parse">Parse</button>
+  </div>
 
-<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
-<script>
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-function Circle(x, y) {
-	this.x = x;
-    this.y = y;
-    this.draw = function() {
-      ctx.beginPath();
-      ctx.arc(x, y,30,0,2*Math.PI);
-      ctx.stroke();
-    }
-}
-var list = [];
-for (var i = 0; i < 3; i++) {
-	for (var j = 0; j < 3; j++) {
-      var c = new Circle(40+i*85, 40+j*85);
-      list.push(c);
-    }
-}
-
-for (var k = 0; k < list.length; k++) {
-	list[k].draw();
-}
-</script> 
-
+  <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
 </body>
+
+<script src="PapaParse/papaparse.min.js"></script>
+<script src="nodesGraph.js"></script>
+
 </html>
