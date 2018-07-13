@@ -3,7 +3,7 @@
 
 <body>
   <div>
-    <input type="file" id="files" multiple>
+    <input type="file" id="file" accept=".csv">
     <button id="submit-parse">Parse</button>
   </div>
 
@@ -11,7 +11,9 @@
     Your browser does not support the HTML5 canvas tag.</canvas>
 </body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="PapaParse/papaparse.min.js"></script>
-<script src="nodesGraph.js"></script>
+<script src="src/nodesGraph.js"></script>
+<script src="src/parseCSV.js"></script>
 
 </html>
