@@ -42,6 +42,20 @@
   <!-- Begin page content -->
   <main role="main" class="container">
     <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
+
+    <div class="accordion" id="accordionExample">
+      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTable" aria-expanded="false" aria-controls="collapseTable">
+        Preview CSV data
+      </button>
+      <div class="collapse" id="collapseTable">
+        <div class="card card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-sm" id="dataTable">
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
       Your browser does not support the HTML5 canvas tag.</canvas>
   </main>
