@@ -23,9 +23,49 @@ function createHeaders(data) {
   var $headers = $("<thead></thead>");
   var $row = $headers.append("<tr></tr>");
   for (var i = 0; i < headers.length; i++) {
-    $row.append("<th>" + headers[i] + "</th>");
+    $row.append(
+      '<th id="' +
+        headers[i] +
+        '">' +
+        headers[i] +
+        createCheckBox("use" + headers[i], "Use") +
+        createFieldType(headers[i]) +
+        "</th>"
+    );
   }
   $("#dataTable").append($headers);
+}
+function createCheckBox(id, text) {
+  return (
+    '<div class="form-group form-check">' +
+    '<input type="checkbox" class="form-check-input" id="' +
+    id +
+    '">' +
+    '<label class="form-check-label" for="' +
+    id +
+    '">' +
+    text +
+    "</label>" +
+    "</div>"
+  );
+}
+
+function createFieldType(name) {
+  //https://www.tutorialrepublic.com/codelab.php?topic=faq&file=jquery-get-selected-radio-button-value
+  return (
+    '<div class="form-check form-check-inline">' +
+    '<input class="form-check-input" type="radio" name="io' +
+    name +
+    '" id="fieldRadio1" value="in">' +
+    '<label class="form-check-label" for="fieldRadio1">input</label>' +
+    "</div>" +
+    '<div class="form-check form-check-inline">' +
+    '<input class="form-check-input" type="radio" name="io' +
+    name +
+    '" id="fieldRadio2" value="out">' +
+    '<label class="form-check-label" for="fieldRadio2">output</label>' +
+    "</div>"
+  );
 }
 
 function createBody(data) {
