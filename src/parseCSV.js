@@ -12,16 +12,25 @@ $(function() {
   });
 });
 
+var last = "";
+
 function createTable(results) {
   emptyTable();
   createHeaders(results.data);
   createBody(results.data);
+
+  console.log("last value is: ", checkIO(last));
+}
+
+function checkIO(id) {
+  return $("input[name='io" + id + "']:checked").val();
 }
 
 function createHeaders(data) {
   var headers = data[0];
   var $headers = $("<thead></thead>");
   var $row = $headers.append("<tr></tr>");
+
   for (var i = 0; i < headers.length; i++) {
     $row.append(
       '<th id="' +
@@ -32,6 +41,7 @@ function createHeaders(data) {
         createFieldType(headers[i]) +
         "</th>"
     );
+    last = headers[i];
   }
   $("#dataTable").append($headers);
 }
@@ -52,16 +62,17 @@ function createCheckBox(id, text) {
 
 function createFieldType(name) {
   //https://www.tutorialrepublic.com/codelab.php?topic=faq&file=jquery-get-selected-radio-button-value
+  var checkBoxId = "io" + name;
   return (
     '<div class="form-check form-check-inline">' +
-    '<input class="form-check-input" type="radio" name="io' +
-    name +
-    '" id="fieldRadio1" value="in">' +
+    '<input class="form-check-input" type="radio" name="' +
+    checkBoxId +
+    '" id="fieldRadio1" value="in" checked>' +
     '<label class="form-check-label" for="fieldRadio1">input</label>' +
     "</div>" +
     '<div class="form-check form-check-inline">' +
-    '<input class="form-check-input" type="radio" name="io' +
-    name +
+    '<input class="form-check-input" type="radio" name="' +
+    checkBoxId +
     '" id="fieldRadio2" value="out">' +
     '<label class="form-check-label" for="fieldRadio2">output</label>' +
     "</div>"
