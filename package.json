@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/warlockxins/machine_learning_demo#readme",
   "dependencies": {
-    "machine-learning": "git+https://bitbucket.org/asemionov/machine_learning.git"
+    "machine-learning": "git+https://bitbucket.org/asemionov/machine_learning.git",
+    "papaparse": "^4.5.0"
   }
 }
