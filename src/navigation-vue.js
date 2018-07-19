@@ -1,8 +1,10 @@
-new Vue({
-  el: "#header",
-  data: {
-    parsed: false,
-    selected: false
+Vue.component("header-navigation", {
+  template: "#header-template",
+  data() {
+    return {
+      parsed: false,
+      selected: false
+    };
   },
   methods: {
     parseFile: function() {
@@ -27,4 +29,8 @@ new Vue({
       }
     }
   }
+});
+
+new Vue({
+  el: "#app"
 });
