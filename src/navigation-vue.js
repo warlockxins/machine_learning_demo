@@ -1,6 +1,6 @@
 Vue.component("header-navigation", {
   template: "#header-template",
-  data() {
+  data: function() {
     return {
       parsed: false,
       selected: false
@@ -18,7 +18,7 @@ Vue.component("header-navigation", {
           self.parsed = true;
           self.selected = false;
           self.$refs.file.value = null;
-          createTable(results);
+          self.$emit("processed", results);
         }
       });
     },
@@ -29,8 +29,4 @@ Vue.component("header-navigation", {
       }
     }
   }
-});
-
-new Vue({
-  el: "#app"
 });
