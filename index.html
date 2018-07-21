@@ -35,6 +35,7 @@
             <button v-else
               class="btn btn-outline-success my-2 my-sm-0"
               type="button" id="submit-learn"
+              v-on:click="$emit('learn')"
               >Start Learning
             </button>
             <button v-if="selected"
@@ -55,28 +56,28 @@
           <thead>
               <tr>
                 <th v-for="(header, index) in headers" :key="index">
-                  {{ header }}
+                  {{ header.name }}
                   <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" :id="'use'+ header">
-                    <label class="form-check-label" :for="'use'+ header">Use</label>
+                    <input type="checkbox" class="form-check-input" :id="'use'+ header.name" v-model="header.use">
+                    <label class="form-check-label" :for="'use'+ header.name">Use</label>
                   </div>
 
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="'header' + header"
-                      :id="'fieldRadio1'+header" value="in" checked>
-                    <label class="form-check-label" :for="'fieldRadio1'+header">input</label>
+                    <input class="form-check-input" type="radio" :name="'header' + header.name"
+                      :id="'fieldRadio1'+header.name" value="in" checked v-model="header.select">
+                    <label class="form-check-label" :for="'fieldRadio1'+header.name">input</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" :name="'header' + header"
-                      :id="'fieldRadio2'+header" value="out">
-                    <label class="form-check-label" :for="'fieldRadio2'+header">output</label>
+                    <input class="form-check-input" type="radio" :name="'header' + header.name"
+                      :id="'fieldRadio2'+header.name" value="out" v-model="header.select">
+                    <label class="form-check-label" :for="'fieldRadio2'+header.name">output</label>
                   </div>
                 </th>
               </tr>
           </thead>
 
           <tbody>
-            <tr v-for="(row, index) in data" :key="index">
+            <tr v-for="(row, index) in dataset" :key="index">
               <td v-for="(cell, cellIndex) in row" :key="cellIndex">
                 {{ cell }}
               </td>
@@ -90,13 +91,13 @@
 
 <body>
   <div id="app">
-    <header-navigation v-on:processed="setData"></header-navigation>
+    <header-navigation v-on:processed="setData" v-on:learn="startLearning"></header-navigation>
 
     <!-- Begin page content -->
     <main role="main" class="container">
       <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
 
-      <data-table v-if="data" :dataset="data">
+      <data-table v-if="data" :dataset="data" :headers="dataHeaders">
       </data-table>
 
       <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
