@@ -17,6 +17,9 @@ new Vue({
 
       this.data = results.data.slice(1, 5);
     },
-    startLearning: function() {}
+    startLearning: function() {
+      var net = new neuralNet.NeuralNet();
+      console.log("net", net);
+    }
   }
 });
