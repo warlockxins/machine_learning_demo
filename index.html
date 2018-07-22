@@ -97,7 +97,7 @@
     <main role="main" class="container">
       <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
 
-      <data-table v-if="data" :dataset="data" :headers="dataHeaders">
+      <data-table v-if="previewData" :dataset="previewData" :headers="dataHeaders">
       </data-table>
 
       <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
