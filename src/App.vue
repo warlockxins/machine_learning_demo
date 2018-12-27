@@ -4,7 +4,7 @@
     <main role="main" class="container">
       <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
 
-      <data-table v-if="previewData" :dataset="previewData" :headers="datasetHeaders"></data-table>
+      <data-table v-if="dataset" :dataset="dataset" :headers="datasetHeaders"></data-table>
 
       <node-graph :network="currentNetwork"></node-graph>
     </main>
@@ -25,10 +25,10 @@ export default {
     DataTable,
     NodeGraph
   },
-  data: function() {
+  data: () => {
     return {
       dataset: undefined,
-      dataHeaders: undefined,
+      datasetHeaders: undefined,
       currentNetwork: undefined
     };
   },
@@ -36,9 +36,7 @@ export default {
     usedHeaders: function() {
       if (!this.datasetHeaders) return [];
 
-      return this.datasetHeaders.filter(function(item) {
-        return item.use === true;
-      });
+      return this.datasetHeaders.filter(item => item.use === true);
     },
     inputHeaders: function() {
       return this.getNodes("in");
@@ -76,7 +74,7 @@ export default {
   },
   methods: {
     setData: function(results) {
-      this.datasetHeaders = results.data[0].map(function(item, index) {
+      this.datasetHeaders = results.data[0].map((item, index) => {
         return {
           name: item,
           use: true,
@@ -88,9 +86,7 @@ export default {
       this.dataset = results.data;
     },
     getNodes: function(isInput) {
-      return this.usedHeaders.filter(function(item) {
-        return item.select == isInput;
-      });
+      return this.usedHeaders.filter(item => item.select == isInput);
     },
     startLearning: function() {
       if (!this.validation.valid) {
@@ -138,7 +134,7 @@ export default {
               outputMap[val] = Object.keys(outputMap).length + 1;
             outputVals[k] = outputMap[val];
           } else {
-            outputVals[k] = Number(this.dataset[i][this.outputVals[k].index]);
+            outputVals[k] = Number(val);
           }
         }
         console.log("input vals", inputVals);
