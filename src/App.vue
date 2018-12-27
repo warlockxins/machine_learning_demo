@@ -1,14 +1,42 @@
-new Vue({
-  el: "#app",
-  data: {
-    data: undefined,
-    dataHeaders: undefined
+<template>
+  <div id="app">
+    <header-navigation v-on:processed="setData" v-on:learn="startLearning"></header-navigation>
+    <main role="main" class="container">
+      <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
+
+      <data-table v-if="previewData" :dataset="previewData" :headers="datasetHeaders"></data-table>
+
+      <node-graph :network="currentNetwork"></node-graph>
+    </main>
+  </div>
+</template>
+
+<script>
+import "./css/sticky-footer-navbar.css";
+import * as ml from "machine-learning";
+import HeaderNavigation from "./components/HeaderNavigation.vue";
+import DataTable from "./components/DataTable.vue";
+import NodeGraph from "./components/NodeGraph";
+
+export default {
+  name: "app",
+  components: {
+    HeaderNavigation,
+    DataTable,
+    NodeGraph
+  },
+  data: function() {
+    return {
+      dataset: undefined,
+      dataHeaders: undefined,
+      currentNetwork: undefined
+    };
   },
   computed: {
     usedHeaders: function() {
-      if (!this.dataHeaders) return [];
+      if (!this.datasetHeaders) return [];
 
-      return this.dataHeaders.filter(function(item) {
+      return this.datasetHeaders.filter(function(item) {
         return item.use === true;
       });
     },
@@ -19,7 +47,7 @@ new Vue({
       return this.getNodes("out");
     },
     previewData: function() {
-      return this.data && this.data.slice(1, 5);
+      return this.dataset && this.dataset.slice(1, 5);
     },
     hiddenNodeCount: function() {
       return Math.ceil(
@@ -48,7 +76,7 @@ new Vue({
   },
   methods: {
     setData: function(results) {
-      this.dataHeaders = results.data[0].map(function(item, index) {
+      this.datasetHeaders = results.data[0].map(function(item, index) {
         return {
           name: item,
           use: true,
@@ -57,7 +85,7 @@ new Vue({
         };
       });
 
-      this.data = results.data;
+      this.dataset = results.data;
     },
     getNodes: function(isInput) {
       return this.usedHeaders.filter(function(item) {
@@ -70,7 +98,10 @@ new Vue({
       }
       console.log("input headers", this.inputHeaders);
       console.log("output headers", this.outputHeaders);
-      var net = new ml.NeuralNet();
+
+      const net = new ml.NeuralNet();
+      this.currentNetwork = net;
+
       net.setTopology(
         [
           this.inputHeaders.length,
@@ -79,36 +110,35 @@ new Vue({
         ],
         ml.transferFunction.tangent
       );
-      console.log("net", net);
-      //drawNetwork(net);
 
-      var inputVals = [];
+      // drawNetwork(net);
+
+      let inputVals = [];
       inputVals.length = this.inputHeaders.length;
 
-      var outputVals = [];
+      let outputVals = [];
       outputVals.length = this.outputHeaders.length;
 
       // iterators
-      var k = 0,
+      let k = 0,
         j = 0;
 
-      var outputMap = {};
+      let outputMap = {};
       let val;
-      for (var i = 41; i < 60; i++) {
-        //parse inputs
-        //for (var i = 1; i < this.data.length; i++) {
+      //parse inputs
+      for (let i = 1; i < this.dataset.length; i++) {
         for (j = 0; j < this.inputHeaders.length; j++) {
-          inputVals[j] = Number(this.data[i][this.inputHeaders[j].index]);
+          inputVals[j] = Number(this.dataset[i][this.inputHeaders[j].index]);
         }
         //parse outputs
         for (k = 0; k < this.outputHeaders.length; k++) {
-          val = this.data[i][this.outputHeaders[k].index];
+          val = this.dataset[i][this.outputHeaders[k].index];
           if (isNaN(val)) {
             if (!outputMap[val])
               outputMap[val] = Object.keys(outputMap).length + 1;
             outputVals[k] = outputMap[val];
           } else {
-            outputVals[k] = Number(this.data[i][this.outputVals[k].index]);
+            outputVals[k] = Number(this.dataset[i][this.outputVals[k].index]);
           }
         }
         console.log("input vals", inputVals);
@@ -118,4 +148,5 @@ new Vue({
       }
     }
   }
-});
+};
+</script>
