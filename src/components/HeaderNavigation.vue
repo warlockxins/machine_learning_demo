@@ -41,6 +41,13 @@
             id="submit-parse"
             v-on:click="parseFile"
           >Parse</button>
+          
+          <button
+            v-if="selected || parsed"
+            class="ml-1 btn btn-info my-2 my-sm-0"
+            type="button"
+            v-on:click="reset"
+          >Clear</button>
         </form>
       </div>
     </nav>
@@ -59,6 +66,14 @@ export default {
     };
   },
   methods: {
+    reset: function() {
+      this.parsed = false;
+      this.selected = false;
+      if (this.$refs.file) {
+        this.$refs.file.value = null;
+      }
+      this.$emit("reset");
+    },
     parseFile: function() {
       var curFiles = this.$refs.file.files;
       if (curFiles.length === 0) {

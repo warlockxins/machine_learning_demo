@@ -1,6 +1,6 @@
 <template>
   <div class="table-responsive">
-    <table class="table table-striped table-sm table-bordered" id="dataTable">
+    <table class="table table-striped table-sm table-bordered table-hover">
       <thead>
         <tr>
           <th v-for="(header, index) in headers" :key="index">

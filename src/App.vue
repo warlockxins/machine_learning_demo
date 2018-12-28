@@ -1,11 +1,8 @@
 <template>
   <div id="app">
-    <header-navigation v-on:processed="setData" v-on:learn="startLearning"></header-navigation>
+    <header-navigation v-on:processed="setData" v-on:learn="startLearning" v-on:reset="reset"></header-navigation>
     <main role="main" class="container">
-      <h1 class="mt-5">Train Neural Network with parsed CSV</h1>
-
       <data-table v-if="dataset" :dataset="dataset" :headers="datasetHeaders"></data-table>
-
       <node-graph :network="currentNetwork"></node-graph>
     </main>
   </div>
@@ -73,7 +70,16 @@ export default {
     }
   },
   methods: {
+    reset: function() {
+      this.dataset = undefined;
+      this.datasetHeaders = undefined;
+      this.currentNetwork = undefined;
+    },
     setData: function(results) {
+      if (!results) {
+        return this.reset();
+      }
+
       this.datasetHeaders = results.data[0].map((item, index) => {
         return {
           name: item,
@@ -92,8 +98,6 @@ export default {
       if (!this.validation.valid) {
         return;
       }
-      console.log("input headers", this.inputHeaders);
-      console.log("output headers", this.outputHeaders);
 
       const net = new ml.NeuralNet();
       this.currentNetwork = net;
@@ -137,8 +141,8 @@ export default {
             outputVals[k] = Number(val);
           }
         }
-        console.log("input vals", inputVals);
-        console.log("output vals", outputVals);
+        // console.log("input vals", inputVals);
+        // console.log("output vals", outputVals);
         net.feedForward(inputVals);
         net.backProp(outputVals);
       }
