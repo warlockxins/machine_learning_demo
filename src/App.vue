@@ -8,17 +8,29 @@
         :headers="datasetHeaders"
         v-on:testRecord="testRecord"
       ></data-table>
-      <node-graph :network="currentNetwork"></node-graph>
+
+      <div v-if="isTraining" class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          :style="{width: `${progress}%`}"
+          :aria-valuenow="progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >{{progress}}%</div>
+      </div>
+      <!-- <node-graph :network="currentNetwork"></node-graph> -->
+      <!-- <node-graph></node-graph> -->
     </main>
   </div>
 </template>
 
 <script>
 import "./css/sticky-footer-navbar.css";
-import * as ml from "machine-learning";
-import HeaderNavigation from "./components/HeaderNavigation.vue";
-import DataTable from "./components/DataTable.vue";
+import HeaderNavigation from "./components/HeaderNavigation";
+import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
+import NeuralNetwork from "./utils/neuralNet";
 
 export default {
   name: "app",
@@ -31,7 +43,9 @@ export default {
     return {
       dataset: undefined,
       datasetHeaders: undefined,
-      currentNetwork: undefined
+      currentNetwork: undefined,
+      progress: 0,
+      isTraining: false
     };
   },
   computed: {
@@ -79,6 +93,7 @@ export default {
       this.dataset = undefined;
       this.datasetHeaders = undefined;
       this.currentNetwork = undefined;
+      this.isTraining = false;
     },
     setData: function(results) {
       if (!results) {
@@ -104,57 +119,25 @@ export default {
         return;
       }
 
-      const net = new ml.NeuralNet();
-      this.currentNetwork = net;
-
-      net.setTopology(
-        [
-          this.inputHeaders.length,
-          this.hiddenNodeCount,
-          this.outputHeaders.length
-        ],
-        ml.transferFunction.tangent
+      this.currentNetwork = new NeuralNetwork(
+        this.inputHeaders,
+        this.outputHeaders,
+        this.hiddenNodeCount
       );
 
-      // drawNetwork(net);
-
-      let inputVals = [];
-      inputVals.length = this.inputHeaders.length;
-
-      let outputVals = [];
-      outputVals.length = this.outputHeaders.length;
-
-      // iterators
-      let k = 0,
-        j = 0;
-
-      let outputMap = {};
-      let val;
-      //parse inputs
-      for (let i = 1; i < this.dataset.length; i++) {
-        let record = this.dataset[i];
-        for (j = 0; j < this.inputHeaders.length; j++) {
-          inputVals[j] = Number(record[this.inputHeaders[j].index]);
-        }
-        //parse outputs
-        for (k = 0; k < this.outputHeaders.length; k++) {
-          val = record[this.outputHeaders[k].index];
-          if (isNaN(val)) {
-            if (!outputMap[val])
-              outputMap[val] = Object.keys(outputMap).length + 1;
-            outputVals[k] = outputMap[val];
-          } else {
-            outputVals[k] = Number(val);
-          }
-        }
-        // console.log("input vals", inputVals);
-        // console.log("output vals", outputVals);
-        net.feedForward(inputVals);
-        net.backProp(outputVals);
-      }
+      this.isTraining = true;
+      this.$nextTick(async () => {
+        await this.currentNetwork.train(this.dataset, progress => {
+          this.progress = progress;
+        });
+        this.$nextTick(() => {
+          this.isTraining = false;
+        });
+      });
     },
     testRecord(record) {
-      console.log("record", record);
+      const res = this.currentNetwork.predictRecord(record);
+      console.log("record", record, "prediction", res);
     }
   }
 };

@@ -10,7 +10,7 @@
 <script>
 export default {
   props: {
-    network: Object
+    // network: Object
   },
   data: function() {
     return {
@@ -22,30 +22,30 @@ export default {
   },
   mounted() {
     this.ctx = this.$refs.canvas.getContext("2d");
-  },
-  watch: {
-    network: function(net) {
-      this.ctx.clearRect(
-        0,
-        0,
-        this.$refs.canvas.width,
-        this.$refs.canvas.height
-      );
-      const self = this;
-      net.m_layers.forEach(function(layer, indexX) {
-        layer.forEach(function(node, indexY) {
-          self.ctx.beginPath();
-          self.ctx.arc(
-            self.offsetX + indexX * self.offsetX,
-            self.offsetY + indexY * self.offsetY,
-            self.circleSize,
-            0,
-            2 * Math.PI
-          );
-          self.ctx.stroke();
-        });
-      });
-    }
   }
+  // watch: {
+  //   network: function(net) {
+  //     this.ctx.clearRect(
+  //       0,
+  //       0,
+  //       this.$refs.canvas.width,
+  //       this.$refs.canvas.height
+  //     );
+  //     const self = this;
+  //     net.m_layers.forEach(function(layer, indexX) {
+  //       layer.forEach(function(node, indexY) {
+  //         self.ctx.beginPath();
+  //         self.ctx.arc(
+  //           self.offsetX + indexX * self.offsetX,
+  //           self.offsetY + indexY * self.offsetY,
+  //           self.circleSize,
+  //           0,
+  //           2 * Math.PI
+  //         );
+  //         self.ctx.stroke();
+  //       });
+  //     });
+  //   }
+  // }
 };
 </script>
