@@ -1,10 +1,9 @@
 <template>
   <div class="table-responsive">
-    <table class="table table-striped table-sm" id="dataTable">
+    <table class="table table-striped table-sm table-bordered" id="dataTable">
       <thead>
         <tr>
           <th v-for="(header, index) in headers" :key="index">
-            {{ header.name }} {{header.use}}
             <div class="form-group form-check">
               <input
                 type="checkbox"
@@ -12,9 +11,17 @@
                 :id="'use'+ header.name"
                 v-model="header.use"
               >
-              <label class="form-check-label" :for="'use'+ header.name">Use</label>
+              <label
+                class="form-check-label"
+                :class="{'text-muted': !header.use}"
+                :for="'use'+ header.name"
+              >{{ header.name }}</label>
             </div>
-
+          </th>
+        </tr>
+        <!-- toggles for input/output -->
+        <tr>
+          <th v-for="(header, index) in headers" :key="index">
             <div v-if="header.use" class="form-check form-check-inline">
               <input
                 class="form-check-input"
@@ -44,12 +51,17 @@
 
       <tbody>
         <tr v-for="(row, index) in currentDataset" :key="index">
-          <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          <td
+            v-for="(cell, cellIndex) in row"
+            :key="cellIndex"
+            :class="{'text-body': headers[cellIndex].use, 
+            'text-muted': !headers[cellIndex].use }"
+          >{{ cell }}</td>
         </tr>
       </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
       <ul class="pagination">
         <li class="page-item" v-if="hasPrevious">
           <a class="page-link" href="#" v-on:click.prevent.stop="current--" aria-label="Previous">
@@ -96,7 +108,7 @@ export default {
       return this.current > 0;
     },
     currentDataset: function() {
-      const start = this.current * 10;
+      const start = Math.max(1, this.current) * 10;
       return this.dataset.slice(start, start + 10);
     }
   },
