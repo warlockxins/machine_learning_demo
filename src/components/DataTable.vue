@@ -50,12 +50,15 @@
       </thead>
 
       <tbody>
-        <tr v-for="(row, index) in currentDataset" :key="index">
+        <tr
+          v-for="(row, index) in currentDataset"
+          :key="index"
+          v-on:click="$emit('testRecord', row)"
+        >
           <td
             v-for="(cell, cellIndex) in row"
             :key="cellIndex"
-            :class="{'text-body': headers[cellIndex].use, 
-            'text-muted': !headers[cellIndex].use }"
+            :class="{'text-body': headers[cellIndex].use, 'text-muted': !headers[cellIndex].use }"
           >{{ cell }}</td>
         </tr>
       </tbody>

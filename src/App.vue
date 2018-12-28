@@ -2,7 +2,12 @@
   <div id="app">
     <header-navigation v-on:processed="setData" v-on:learn="startLearning" v-on:reset="reset"></header-navigation>
     <main role="main" class="container">
-      <data-table v-if="dataset" :dataset="dataset" :headers="datasetHeaders"></data-table>
+      <data-table
+        v-if="dataset"
+        :dataset="dataset"
+        :headers="datasetHeaders"
+        v-on:testRecord="testRecord"
+      ></data-table>
       <node-graph :network="currentNetwork"></node-graph>
     </main>
   </div>
@@ -127,12 +132,13 @@ export default {
       let val;
       //parse inputs
       for (let i = 1; i < this.dataset.length; i++) {
+        let record = this.dataset[i];
         for (j = 0; j < this.inputHeaders.length; j++) {
-          inputVals[j] = Number(this.dataset[i][this.inputHeaders[j].index]);
+          inputVals[j] = Number(record[this.inputHeaders[j].index]);
         }
         //parse outputs
         for (k = 0; k < this.outputHeaders.length; k++) {
-          val = this.dataset[i][this.outputHeaders[k].index];
+          val = record[this.outputHeaders[k].index];
           if (isNaN(val)) {
             if (!outputMap[val])
               outputMap[val] = Object.keys(outputMap).length + 1;
@@ -146,6 +152,9 @@ export default {
         net.feedForward(inputVals);
         net.backProp(outputVals);
       }
+    },
+    testRecord(record) {
+      console.log("record", record);
     }
   }
 };
