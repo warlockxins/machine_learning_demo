@@ -74,11 +74,11 @@
         </li>
         <li
           class="page-item"
-          :class="{'active': index === current}"
-          v-for="(_, index) in pages"
+          :class="{'active': item === current}"
+          v-for="(item, index) in pageRegion"
           :key="index"
         >
-          <a class="page-link" href="#" v-on:click.prevent.stop="current = index">{{ index + 1 }}</a>
+          <a class="page-link" href="#" v-on:click.prevent.stop="current = item">{{ item + 1 }}</a>
         </li>
 
         <li class="page-item" v-if="hasNext">
@@ -103,6 +103,19 @@ export default {
       if (this.dataset.length > 10) {
         return Math.floor(this.dataset.length / 10);
       }
+    },
+    pageRegion: function() {
+      let start = Math.max(this.current - 5, 0);
+      const end = Math.min(start + 11, this.pages);
+      if (this.pages > 10 && end - 11 < start) {
+        start = end - 11;
+      }
+      const region = [];
+      region.length = end - start;
+      for (let index = 0; index < end - start; index++) {
+        region[index] = start + index;
+      }
+      return region;
     },
     hasNext: function() {
       return this.current < this.pages - 1;
