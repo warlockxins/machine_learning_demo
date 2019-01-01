@@ -1,28 +1,38 @@
 <template>
-  <div id="app">
-    <header-navigation v-on:processed="setData" v-on:learn="startLearning" v-on:reset="reset"></header-navigation>
-    <main role="main" class="container">
-      <data-table
-        v-if="dataset"
-        :dataset="dataset"
-        :headers="datasetHeaders"
-        v-on:testRecord="testRecord"
-      ></data-table>
+    <div id="app">
+        <header-navigation
+            v-on:processed="setData"
+            v-on:learn="startLearning"
+            v-on:reset="reset"
+            :canLearn="canLearn"
+        ></header-navigation>
+        <main role="main" class="container">
+            <data-table
+                ref="dataTable"
+                v-if="dataset"
+                :inputData="dataset"
+                v-on:testRecord="testRecord"
+                v-on:validationChange="validationChange"
+                :clickableRows="finishedLearning"
+            ></data-table>
 
-      <div v-if="isTraining" class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          :style="{width: `${progress}%`}"
-          :aria-valuenow="progress"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >{{progress}}%</div>
-      </div>
-      <!-- <node-graph :network="currentNetwork"></node-graph> -->
-      <!-- <node-graph></node-graph> -->
-    </main>
-  </div>
+            <div v-if="predictions.length">
+                <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
+            </div>
+
+            <div v-if="isTraining" class="progress">
+                <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{width: `${progress}%`}"
+                    :aria-valuenow="progress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                >{{progress}}%</div>
+            </div>
+            <node-graph v-if="finishedLearning" :network="currentNetwork.net"></node-graph>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -33,112 +43,72 @@ import NodeGraph from "./components/NodeGraph";
 import NeuralNetwork from "./utils/neuralNet";
 
 export default {
-  name: "app",
-  components: {
-    HeaderNavigation,
-    DataTable,
-    NodeGraph
-  },
-  data: () => {
-    return {
-      dataset: undefined,
-      datasetHeaders: undefined,
-      currentNetwork: undefined,
-      progress: 0,
-      isTraining: false
-    };
-  },
-  computed: {
-    usedHeaders: function() {
-      if (!this.datasetHeaders) return [];
-
-      return this.datasetHeaders.filter(item => item.use === true);
+    name: "app",
+    components: {
+        HeaderNavigation,
+        DataTable,
+        NodeGraph
     },
-    inputHeaders: function() {
-      return this.getNodes("in");
-    },
-    outputHeaders: function() {
-      return this.getNodes("out");
-    },
-    previewData: function() {
-      return this.dataset && this.dataset.slice(1, 5);
-    },
-    hiddenNodeCount: function() {
-      return Math.ceil(
-        ((this.inputHeaders.length + this.outputHeaders.length) * 2) / 3
-      );
-    },
-    validation: function() {
-      if (this.inputHeaders.length === 0) {
+    data: () => {
         return {
-          valid: false,
-          message: "input node count cannot be 0"
+            dataset: undefined,
+            currentNetwork: undefined,
+            progress: 0,
+            isTraining: false,
+            canLearn: false,
+            finishedLearning: false,
+            predictions: []
         };
-      }
+    },
+    methods: {
+        reset: function() {
+            this.dataset = undefined;
+            this.currentNetwork = undefined;
+            this.isTraining = false;
+            this.finishedLearning = false;
+            this.predictions = [];
+        },
+        setData: function(results) {
+            if (!results) {
+                return this.reset();
+            }
 
-      if (this.outputHeaders.length === 0) {
-        return {
-          valid: false,
-          message: "output node count cannot be 0"
-        };
-      }
+            this.dataset = results.data;
+        },
+        validationChange(validation) {
+            this.canLearn = validation;
+        },
+        startLearning: function() {
+            if (!this.canLearn) {
+                return;
+            }
 
-      return {
-        valid: true
-      };
+            const {
+                inputHeaders,
+                outputHeaders,
+                hiddenNodeCount
+            } = this.$refs.dataTable;
+
+            this.currentNetwork = new NeuralNetwork(
+                inputHeaders,
+                outputHeaders,
+                hiddenNodeCount
+            );
+
+            this.isTraining = true;
+            this.$nextTick(async () => {
+                await this.currentNetwork.train(this.dataset, progress => {
+                    this.progress = progress;
+                });
+                this.$nextTick(() => {
+                    this.isTraining = false;
+                    this.finishedLearning = true;
+                });
+            });
+        },
+        testRecord(record) {
+            this.predictions = this.currentNetwork.predictRecord(record);
+        }
     }
-  },
-  methods: {
-    reset: function() {
-      this.dataset = undefined;
-      this.datasetHeaders = undefined;
-      this.currentNetwork = undefined;
-      this.isTraining = false;
-    },
-    setData: function(results) {
-      if (!results) {
-        return this.reset();
-      }
-
-      this.datasetHeaders = results.data[0].map((item, index) => {
-        return {
-          name: item,
-          use: true,
-          select: "in", //out
-          index: index
-        };
-      });
-
-      this.dataset = results.data;
-    },
-    getNodes: function(isInput) {
-      return this.usedHeaders.filter(item => item.select == isInput);
-    },
-    startLearning: function() {
-      if (!this.validation.valid) {
-        return;
-      }
-
-      this.currentNetwork = new NeuralNetwork(
-        this.inputHeaders,
-        this.outputHeaders,
-        this.hiddenNodeCount
-      );
-
-      this.isTraining = true;
-      this.$nextTick(async () => {
-        await this.currentNetwork.train(this.dataset, progress => {
-          this.progress = progress;
-        });
-        this.$nextTick(() => {
-          this.isTraining = false;
-        });
-      });
-    },
-    testRecord(record) {
-      const res = this.currentNetwork.predictRecord(record);
-      console.log("record", record, "prediction", res);
-    }
-  }
 };
 </script>
