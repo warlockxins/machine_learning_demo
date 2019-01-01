@@ -32,21 +32,24 @@ export default {
                 this.$refs.canvas.width,
                 this.$refs.canvas.height
             );
-            const self = this;
-            this.network.m_layers.forEach(function(layer, indexX) {
-                layer.forEach(function(node, indexY) {
-                    self.ctx.beginPath();
-                    self.ctx.arc(
-                        self.offsetX + indexX * self.offsetX,
-                        self.offsetY + indexY * self.offsetY,
-                        self.circleSize,
-                        0,
-                        2 * Math.PI
-                    );
-                    self.ctx.stroke();
-                });
+            this.network.m_layers.forEach((layer, indexX) => {
+                this.drawLayer(layer, indexX);
             });
-        }
+        },
+        drawLayer: function(layer, indexX) {
+            layer.forEach((node, indexY) => {
+                this.ctx.beginPath();
+                this.ctx.arc(
+                    this.offsetX + indexX * this.offsetX,
+                    this.offsetY + indexY * this.offsetY,
+                    this.circleSize,
+                    0,
+                    2 * Math.PI
+                );
+                this.ctx.stroke();
+            });
+        },
+        drawLayerConnections: function() {}
     }
 };
 </script>
