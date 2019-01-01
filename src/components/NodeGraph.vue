@@ -8,6 +8,7 @@
 </template>
 
 <script>
+const pi2 = 2 * Math.PI;
 export default {
     props: {
         network: Object
@@ -16,8 +17,8 @@ export default {
         return {
             ctx: null,
             circleSize: 30,
-            offsetX: 30 * 2 + 40,
-            offsetY: 30 * 2 + 10
+            offsetX: 60 * 2 + 40,
+            offsetY: 60 * 2 + 10
         };
     },
     mounted() {
@@ -32,24 +33,47 @@ export default {
                 this.$refs.canvas.width,
                 this.$refs.canvas.height
             );
-            this.network.m_layers.forEach((layer, indexX) => {
-                this.drawLayer(layer, indexX);
-            });
+
+            for (
+                let indexX = 0;
+                indexX < this.network.m_layers.length;
+                indexX++
+            ) {
+                const layer = this.network.m_layers[indexX];
+                let layerTo;
+                if (indexX !== this.network.m_layers.length - 1) {
+                    layerTo = this.network.m_layers[indexX + 1];
+                }
+                this.drawLayer(layer, indexX, layerTo);
+            }
         },
-        drawLayer: function(layer, indexX) {
+        drawLayer: function(layer, indexX, layerTo) {
             layer.forEach((node, indexY) => {
+                const x = this.offsetX + indexX * this.offsetX;
+                const y = this.offsetY + indexY * this.offsetY;
+
                 this.ctx.beginPath();
-                this.ctx.arc(
-                    this.offsetX + indexX * this.offsetX,
-                    this.offsetY + indexY * this.offsetY,
-                    this.circleSize,
-                    0,
-                    2 * Math.PI
-                );
+                this.ctx.arc(x, y, this.circleSize, 0, pi2);
                 this.ctx.stroke();
+
+                if (!layerTo) {
+                    return;
+                }
+
+                const layerToX = x + this.circleSize;
+                layerTo.forEach((lineNode, indexLine) => {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(layerToX, y);
+                    this.ctx.lineTo(
+                        this.offsetX +
+                            (indexX + 1) * this.offsetX -
+                            this.circleSize,
+                        this.offsetY + indexLine * this.offsetY
+                    );
+                    this.ctx.stroke();
+                });
             });
-        },
-        drawLayerConnections: function() {}
+        }
     }
 };
 </script>
