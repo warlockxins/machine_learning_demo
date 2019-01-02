@@ -210,7 +210,7 @@ export default {
             return this.current > 0;
         },
         currentDataset: function() {
-            const start = Math.max(1, this.current) * 10;
+            const start = this.current * 10 + 1;
             return this.dataset.slice(start, start + 10);
         }
     },

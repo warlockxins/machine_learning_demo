@@ -27,6 +27,7 @@ export default class NeuralNetwork {
             let stepCounter = 0;
             for (let i = 1; i < dataset.length - 1; i++) {
                 this.processRecord(dataset[i]);
+                this.net.backProp(this.outputVals);
 
                 stepCounter++;
                 if (stepCounter > 5) {
@@ -56,10 +57,12 @@ export default class NeuralNetwork {
             }
         }
         this.net.feedForward(this.inputVals);
-        this.net.backProp(this.outputVals);
     }
     predictRecord(record) {
         this.processRecord(record);
-        return this.net.getResults();
+        return {
+            results: this.net.getResults(),
+            error: this.net.getRecentAverageError(),
+        };
     }
 }

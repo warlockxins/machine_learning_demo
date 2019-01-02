@@ -34,7 +34,9 @@
                         id="submit-learn"
                         v-on:click="$emit('learn')"
                         :disabled="!canLearn"
-                    >Start Learning</button>
+                    >
+                        {{ finishedLearning ? "Another GO!" : "Learn"}}
+                    </button>
                     <button
                         v-if="selected"
                         class="btn btn-primary my-2 my-sm-0"
@@ -60,7 +62,7 @@ import Papa from "papaparse";
 
 export default {
     name: "header-navigation",
-    props: ["canLearn"],
+    props: ["canLearn", "finishedLearning"],
     data: function() {
         return {
             parsed: false,

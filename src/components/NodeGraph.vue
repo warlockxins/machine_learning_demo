@@ -1,8 +1,8 @@
 <template>
     <canvas
         ref="canvas"
-        width="400"
-        height="400"
+        width="800"
+        height="600"
         style="border:1px solid #d3d3d3;"
     >Your browser does not support the HTML5 canvas tag.</canvas>
 </template>
@@ -49,11 +49,12 @@ export default {
         },
         drawLayer: function(layer, indexX, layerTo) {
             layer.forEach((node, indexY) => {
-                const x = this.offsetX + indexX * this.offsetX;
-                const y = this.offsetY + indexY * this.offsetY;
+                const x = this.circleSize + indexX * this.offsetX;
+                const y = this.circleSize + indexY * this.offsetY;
 
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, this.circleSize, 0, pi2);
+                this.ctx.strokeStyle = "#000000";
                 this.ctx.stroke();
 
                 if (!layerTo) {
@@ -65,13 +66,15 @@ export default {
                     this.ctx.beginPath();
                     this.ctx.moveTo(layerToX, y);
                     this.ctx.lineTo(
-                        this.offsetX +
-                            (indexX + 1) * this.offsetX -
-                            this.circleSize,
-                        this.offsetY + indexLine * this.offsetY
+                            (indexX + 1) * this.offsetX,
+                        indexLine * this.offsetY + this.circleSize
                     );
+
+                    const color = Math.random() > 0.5 ? "red" : "blue";
+                    this.ctx.strokeStyle = color;
                     this.ctx.stroke();
                 });
+                
             });
         }
     }

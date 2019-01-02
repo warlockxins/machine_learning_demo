@@ -5,6 +5,7 @@
             v-on:learn="startLearning"
             v-on:reset="reset"
             :canLearn="canLearn"
+            :finishedLearning="finishedLearning"
         ></header-navigation>
         <main role="main" class="container">
             <data-table
@@ -18,6 +19,7 @@
 
             <div v-if="predictions.length">
                 <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
+                <div>Error: {{ predictionError }}</div>
             </div>
 
             <div v-if="isTraining" class="progress">
@@ -57,7 +59,8 @@ export default {
             isTraining: false,
             canLearn: false,
             finishedLearning: false,
-            predictions: []
+            predictions: [],
+            predictionError: 0,
         };
     },
     methods: {
@@ -67,6 +70,7 @@ export default {
             this.isTraining = false;
             this.finishedLearning = false;
             this.predictions = [];
+            this.predictionError = 0;
         },
         setData: function(results) {
             if (!results) {
@@ -89,11 +93,13 @@ export default {
                 hiddenNodeCount
             } = this.$refs.dataTable;
 
-            this.currentNetwork = new NeuralNetwork(
-                inputHeaders,
-                outputHeaders,
-                hiddenNodeCount
-            );
+            if (!this.currentNetwork) {
+                this.currentNetwork = new NeuralNetwork(
+                    inputHeaders,
+                    outputHeaders,
+                    hiddenNodeCount
+                );
+            }
 
             this.isTraining = true;
             this.$nextTick(async () => {
@@ -107,7 +113,9 @@ export default {
             });
         },
         testRecord(record) {
-            this.predictions = this.currentNetwork.predictRecord(record);
+            const { results, error } = this.currentNetwork.predictRecord(record);
+            this.predictions = results;
+            this.predictionError = error;
         }
     }
 };
