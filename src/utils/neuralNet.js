@@ -1,4 +1,5 @@
 import * as ml from "machine-learning";
+import { zeroOne, minPlusOne } from "./normalize";
 
 export default class NeuralNetwork {
     net = undefined;
@@ -7,6 +8,7 @@ export default class NeuralNetwork {
     outputVals = [];
     outputMap = {};
     dataset = [];
+    normalized = false;
 
     constructor(dataset, inputHeaders, outputHeaders, hiddenNodeCount) {
         this.net = new ml.NeuralNet();
@@ -28,8 +30,33 @@ export default class NeuralNetwork {
         );
     }
 
+    normalize() {
+        const range = {
+            min: Number.POSITIVE_INFINITY,
+            max: Number.NEGATIVE_INFINITY
+        };
+
+        for (let i = 1; i < this.dataset.length - 1; i++) {
+            range.min = Math.min(range.min, this.dataset[i][0]);
+            range.max = Math.max(range.max, this.dataset[i][0]);
+        }
+
+        const normalised = [];
+        for (let i = 1; i < this.dataset.length - 1; i++) {
+            // normalised.push(zeroOne(this.dataset[i][0], range));
+            normalised.push(minPlusOne(this.dataset[i][0], range));
+        }
+
+        // console.log("normalized", normalised);
+        this.normalized = true;
+    }
+
     train(callback) {
         return new Promise(resolve => {
+            //normalize
+            if (!this.normalized) {
+                this.normalize();
+            }
             //parse inputs
             let stepCounter = 0;
             for (let i = 1; i < this.dataset.length - 1; i++) {
@@ -46,22 +73,14 @@ export default class NeuralNetwork {
         });
     }
     processRecord(record) {
-        let val;
         let i = 0;
+        //parse inputs
         for (; i < this.inputHeaders.length; i++) {
             this.inputVals[i] = Number(record[this.inputHeaders[i].index]);
         }
-        //parse outputs
+        // parse outputs
         for (i = 0; i < this.outputHeaders.length; i++) {
-            val = record[this.outputHeaders[i].index];
-            if (isNaN(val)) {
-                if (!this.outputMap[val])
-                    this.outputMap[val] =
-                        Object.keys(this.outputMap).length + 1;
-                this.outputVals[i] = this.outputMap[val];
-            } else {
-                this.outputVals[i] = Number(val);
-            }
+            this.outputVals[i] = Number(record[this.outputHeaders[i].index]);
         }
         this.net.feedForward(this.inputVals);
     }

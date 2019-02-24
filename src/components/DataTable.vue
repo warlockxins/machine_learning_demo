@@ -147,7 +147,7 @@ export default {
                 name: item,
                 use: true,
                 select: "in", //out
-                index: index
+                index: index,
             };
         });
     },
