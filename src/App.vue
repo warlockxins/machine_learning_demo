@@ -33,6 +33,13 @@
                 >{{progress}}%</div>
             </div>
             <node-graph v-if="currentNetwork" :network="currentNetwork.net" ref="graph"></node-graph>
+
+            <button
+                class="btn btn-primary my-2 my-sm-0"
+                type="button"
+                id="submit-parse"
+                v-on:click="normalsCheck"
+            >NORMS</button>
         </main>
     </div>
 </template>
@@ -43,6 +50,8 @@ import HeaderNavigation from "./components/HeaderNavigation";
 import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
 import NeuralNetwork from "./utils/neuralNet";
+
+import { testNormalization } from "./utils/normalize";
 
 export default {
     name: "app",
@@ -64,6 +73,9 @@ export default {
         };
     },
     methods: {
+        normalsCheck: function() {
+            testNormalization();
+        },
         reset: function() {
             this.dataset = undefined;
             this.currentNetwork = undefined;
