@@ -6,33 +6,40 @@ export default class NeuralNetwork {
     inputVals = [];
     outputVals = [];
     outputMap = {};
+    dataset = [];
 
-    constructor(inputHeaders, outputHeaders, hiddenNodeCount) {
+    constructor(dataset, inputHeaders, outputHeaders, hiddenNodeCount) {
         this.net = new ml.NeuralNet();
         this.inputVals.length = inputHeaders.length;
         this.outputVals.length = outputHeaders.length;
+        this.dataset = dataset;
 
         this.inputHeaders = inputHeaders;
         this.outputHeaders = outputHeaders;
 
         this.net.setTopology(
-            [inputHeaders.length, hiddenNodeCount, outputHeaders.length],
+            [
+                inputHeaders.length,
+                hiddenNodeCount,
+                hiddenNodeCount,
+                outputHeaders.length
+            ],
             ml.transferFunction.tangent
         );
     }
 
-    train(dataset, callback) {
+    train(callback) {
         return new Promise(resolve => {
             //parse inputs
             let stepCounter = 0;
-            for (let i = 1; i < dataset.length - 1; i++) {
-                this.processRecord(dataset[i]);
+            for (let i = 1; i < this.dataset.length - 1; i++) {
+                this.processRecord(this.dataset[i]);
                 this.net.backProp(this.outputVals);
 
                 stepCounter++;
                 if (stepCounter > 5) {
                     stepCounter = 0;
-                    callback(Math.ceil((i / dataset.length) * 100));
+                    callback(Math.ceil((i / this.dataset.length) * 100));
                 }
             }
             resolve();
@@ -62,7 +69,7 @@ export default class NeuralNetwork {
         this.processRecord(record);
         return {
             results: this.net.getResults(),
-            error: this.net.getRecentAverageError(),
+            error: this.net.getRecentAverageError()
         };
     }
 }

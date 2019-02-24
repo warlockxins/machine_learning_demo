@@ -32,7 +32,7 @@
                     aria-valuemax="100"
                 >{{progress}}%</div>
             </div>
-            <node-graph v-if="finishedLearning" :network="currentNetwork.net"></node-graph>
+            <node-graph v-if="currentNetwork" :network="currentNetwork.net" ref="graph"></node-graph>
         </main>
     </div>
 </template>
@@ -60,7 +60,7 @@ export default {
             canLearn: false,
             finishedLearning: false,
             predictions: [],
-            predictionError: 0,
+            predictionError: 0
         };
     },
     methods: {
@@ -87,6 +87,8 @@ export default {
                 return;
             }
 
+            this.finishedLearning = false;
+
             const {
                 inputHeaders,
                 outputHeaders,
@@ -95,6 +97,7 @@ export default {
 
             if (!this.currentNetwork) {
                 this.currentNetwork = new NeuralNetwork(
+                    this.dataset,
                     inputHeaders,
                     outputHeaders,
                     hiddenNodeCount
@@ -103,17 +106,20 @@ export default {
 
             this.isTraining = true;
             this.$nextTick(async () => {
-                await this.currentNetwork.train(this.dataset, progress => {
+                await this.currentNetwork.train(progress => {
                     this.progress = progress;
                 });
+                this.isTraining = false;
+                this.finishedLearning = true;
                 this.$nextTick(() => {
-                    this.isTraining = false;
-                    this.finishedLearning = true;
+                    this.$refs.graph.drawNetwork();
                 });
             });
         },
         testRecord(record) {
-            const { results, error } = this.currentNetwork.predictRecord(record);
+            const { results, error } = this.currentNetwork.predictRecord(
+                record
+            );
             this.predictions = results;
             this.predictionError = error;
         }
