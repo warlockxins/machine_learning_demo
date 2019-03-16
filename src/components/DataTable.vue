@@ -37,9 +37,9 @@
                                 type="radio"
                                 :name="'header' + header.name"
                                 :id="'fieldRadio1'+header.name"
-                                value="in"
+                                :value="IS_INPUT"
                                 checked
-                                v-model="header.select"
+                                v-model="header.isInput"
                             >
                             <label class="form-check-label" :for="'fieldRadio1'+header.name">input</label>
                         </div>
@@ -49,8 +49,8 @@
                                 type="radio"
                                 :name="'header' + header.name"
                                 :id="'fieldRadio2'+header.name"
-                                value="out"
-                                v-model="header.select"
+                                :value="IS_OUTPUT"
+                                v-model="header.isInput"
                             >
                             <label class="form-check-label" :for="'fieldRadio2'+header.name">output</label>
                         </div>
@@ -132,6 +132,8 @@ export default {
     },
     data: function() {
         return {
+            IS_INPUT: 0,
+            IS_OUTPUT: 1,
             current: 0,
             dataset: this.inputData,
             datasetHeaders: []
@@ -146,8 +148,8 @@ export default {
             return {
                 name: item,
                 use: true,
-                select: "in", //out
-                index: index,
+                isInput: this.IS_INPUT,
+                index: index
             };
         });
     },
@@ -162,27 +164,24 @@ export default {
             }
             return 0;
         },
-        inputHeaders: function() {
-            return this.getNodes("in");
-        },
-        outputHeaders: function() {
-            return this.getNodes("out");
-        },
         previewData: function() {
             return this.dataset && this.dataset.slice(1, 5);
         },
-        hiddenNodeCount: function() {
-            return Math.ceil(
-                ((this.inputHeaders.length + this.outputHeaders.length) * 2) / 3
-            );
-        },
         errors: function() {
             const errors = [];
-            if (this.inputHeaders.length === 0) {
+
+            let headerCount = this.usedHeaders.filter(
+                item => item.isInput === this.IS_INPUT
+            ).length;
+            if (headerCount === 0) {
                 errors.push("Input node count cannot be 0");
             }
 
-            if (this.outputHeaders.length === 0) {
+            headerCount = this.usedHeaders.filter(
+                item => item.isInput === this.IS_OUTPUT
+            ).length;
+
+            if (headerCount === 0) {
                 errors.push("Output node count cannot be 0");
             }
 
@@ -212,11 +211,6 @@ export default {
         currentDataset: function() {
             const start = this.current * 10 + 1;
             return this.dataset.slice(start, start + 10);
-        }
-    },
-    methods: {
-        getNodes: function(isInput) {
-            return this.usedHeaders.filter(item => item.select == isInput);
         }
     }
 };

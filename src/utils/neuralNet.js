@@ -3,15 +3,26 @@ import { zeroOne, minPlusOne } from "./normalize";
 
 export default class NeuralNetwork {
     net = undefined;
-    // input/output vals params,
     inputVals = [];
     outputVals = [];
     outputMap = {};
     dataset = [];
     normalized = false;
 
-    constructor(dataset, inputHeaders, outputHeaders, hiddenNodeCount) {
+    constructor(dataset, usedHeaders) {
         this.net = new ml.NeuralNet();
+
+        const IS_INPUT = 0,
+            IS_OUTPUT = 1;
+
+        const inputHeaders = usedHeaders.filter(
+            item => item.isInput === IS_INPUT
+        );
+
+        const outputHeaders = usedHeaders.filter(
+            item => item.isInput === IS_OUTPUT
+        );
+
         this.inputVals.length = inputHeaders.length;
         this.outputVals.length = outputHeaders.length;
         this.dataset = dataset;
@@ -19,6 +30,9 @@ export default class NeuralNetwork {
         this.inputHeaders = inputHeaders;
         this.outputHeaders = outputHeaders;
 
+        const hiddenNodeCount = Math.ceil((usedHeaders.length * 2) / 3);
+
+        // remember to allow HiddenNode count selection
         this.net.setTopology(
             [
                 inputHeaders.length,
@@ -41,13 +55,13 @@ export default class NeuralNetwork {
             range.max = Math.max(range.max, this.dataset[i][0]);
         }
 
-        const normalised = [];
+        const normalisedData = [];
         for (let i = 1; i < this.dataset.length - 1; i++) {
             // normalised.push(zeroOne(this.dataset[i][0], range));
-            normalised.push(minPlusOne(this.dataset[i][0], range));
+            normalisedData.push(minPlusOne(this.dataset[i][0], range));
         }
 
-        // console.log("normalized", normalised);
+        console.log("normalized", normalisedData);
         this.normalized = true;
     }
 

@@ -13,10 +13,9 @@
                 v-if="dataset"
                 :inputData="dataset"
                 v-on:testRecord="testRecord"
-                v-on:validationChange="validationChange"
+                v-on:validationChange="canLearn = $event"
                 :clickableRows="finishedLearning"
             ></data-table>
-
             <div v-if="predictions.length">
                 <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
                 <div>Error: {{ predictionError }}</div>
@@ -79,9 +78,6 @@ export default {
 
             this.dataset = results.data;
         },
-        validationChange(validation) {
-            this.canLearn = validation;
-        },
         startLearning: function() {
             if (!this.canLearn) {
                 return;
@@ -89,18 +85,12 @@ export default {
 
             this.finishedLearning = false;
 
-            const {
-                inputHeaders,
-                outputHeaders,
-                hiddenNodeCount
-            } = this.$refs.dataTable;
+            const { usedHeaders } = this.$refs.dataTable;
 
             if (!this.currentNetwork) {
                 this.currentNetwork = new NeuralNetwork(
                     this.dataset,
-                    inputHeaders,
-                    outputHeaders,
-                    hiddenNodeCount
+                    usedHeaders
                 );
             }
 
