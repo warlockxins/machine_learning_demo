@@ -15,30 +15,27 @@ export default class NeuralNetwork {
         const IS_INPUT = 0,
             IS_OUTPUT = 1;
 
-        const inputHeaders = usedHeaders.filter(
+        this.inputHeaders = usedHeaders.filter(
             item => item.isInput === IS_INPUT
         );
 
-        const outputHeaders = usedHeaders.filter(
+        this.outputHeaders = usedHeaders.filter(
             item => item.isInput === IS_OUTPUT
         );
 
-        this.inputVals.length = inputHeaders.length;
-        this.outputVals.length = outputHeaders.length;
+        this.inputVals.length = this.inputHeaders.length;
+        this.outputVals.length = this.outputHeaders.length;
         this.dataset = dataset;
-
-        this.inputHeaders = inputHeaders;
-        this.outputHeaders = outputHeaders;
 
         const hiddenNodeCount = Math.ceil((usedHeaders.length * 2) / 3);
 
         // remember to allow HiddenNode count selection
         this.net.setTopology(
             [
-                inputHeaders.length,
+                this.inputHeaders.length,
                 hiddenNodeCount,
                 hiddenNodeCount,
-                outputHeaders.length
+                this.outputHeaders.length
             ],
             ml.transferFunction.tangent
         );
