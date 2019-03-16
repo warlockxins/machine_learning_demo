@@ -1,5 +1,5 @@
 import * as ml from "machine-learning";
-import { zeroOne, minPlusOne } from "./normalize";
+import { minPlusOne } from "./normalize";
 
 export default class NeuralNetwork {
     net = undefined;
@@ -8,6 +8,8 @@ export default class NeuralNetwork {
     outputMap = {};
     dataset = [];
     normalized = false;
+
+    inputNormalization = {};
 
     constructor(dataset, usedHeaders) {
         this.net = new ml.NeuralNet();
@@ -42,23 +44,30 @@ export default class NeuralNetwork {
     }
 
     normalize() {
-        const range = {
-            min: Number.POSITIVE_INFINITY,
-            max: Number.NEGATIVE_INFINITY
-        };
+        let j = 0;
 
-        for (let i = 1; i < this.dataset.length - 1; i++) {
-            range.min = Math.min(range.min, this.dataset[i][0]);
-            range.max = Math.max(range.max, this.dataset[i][0]);
+        for (; j < this.inputHeaders.length; j++) {
+            this.inputNormalization[j] = {
+                min: Number.POSITIVE_INFINITY,
+                max: Number.NEGATIVE_INFINITY
+            };
         }
 
-        const normalisedData = [];
         for (let i = 1; i < this.dataset.length - 1; i++) {
-            // normalised.push(zeroOne(this.dataset[i][0], range));
-            normalisedData.push(minPlusOne(this.dataset[i][0], range));
+            const record = this.dataset[i];
+
+            for (j = 0; j < this.inputHeaders.length; j++) {
+                this.inputNormalization[j].min = Math.min(
+                    this.inputNormalization[j].min,
+                    Number(record[this.inputHeaders[j].index])
+                );
+                this.inputNormalization[j].max = Math.max(
+                    this.inputNormalization[j].max,
+                    Number(record[this.inputHeaders[j].index])
+                );
+            }
         }
 
-        console.log("normalized", normalisedData);
         this.normalized = true;
     }
 
@@ -87,7 +96,10 @@ export default class NeuralNetwork {
         let i = 0;
         //parse inputs
         for (; i < this.inputHeaders.length; i++) {
-            this.inputVals[i] = Number(record[this.inputHeaders[i].index]);
+            this.inputVals[i] = minPlusOne(
+                Number(record[this.inputHeaders[i].index]),
+                this.inputNormalization[i]
+            );
         }
         // parse outputs
         for (i = 0; i < this.outputHeaders.length; i++) {
