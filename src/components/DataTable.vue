@@ -56,6 +56,37 @@
                         </div>
                     </th>
                 </tr>
+                <!-- toggles for numeric/lable -->
+                <tr>
+                    <th v-for="(header, index) in datasetHeaders" :key="index">
+                        <div v-if="header.use" class="form-check form-check-inline">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                :name="'numericRadio1' + header.name"
+                                :id="'numericRadio1'+header.name"
+                                value="true"
+                                checked
+                                v-model="header.isNumber"
+                            >
+                            <label
+                                class="form-check-label"
+                                :for="'numericRadio1'+header.name"
+                            >numeric</label>
+                        </div>
+                        <div v-if="header.use" class="form-check form-check-inline">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                :name="'numericRadio2' + header.name"
+                                :id="'numericRadio2'+header.name"
+                                value="false"
+                                v-model="header.isNumber"
+                            >
+                            <label class="form-check-label" :for="'numericRadio2'+header.name">lable</label>
+                        </div>
+                    </th>
+                </tr>
             </thead>
 
             <tbody>
@@ -147,7 +178,8 @@ export default {
                 name: item,
                 use: true,
                 isInput: IS_INPUT,
-                index: index
+                index: index,
+                isNumber: true
             };
         });
     },

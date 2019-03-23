@@ -31,6 +31,12 @@ export default class NeuralNetwork {
             item => item.isInput === IS_OUTPUT
         );
 
+        // Todo specify Normalization function According to number/lable choice
+        // const labels = this.usedHeaders.filter(item => {
+        //     console.log(item.isNumber);
+        //     return item.isNumber == "false";
+        // });
+
         this.inputVals.length = this.inputHeaders.length;
         this.outputVals.length = this.outputHeaders.length;
 
