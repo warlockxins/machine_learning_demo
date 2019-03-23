@@ -125,6 +125,8 @@
 </template>
 
 <script>
+import { IS_INPUT, IS_OUTPUT } from "../utils/constants";
+
 export default {
     props: {
         inputData: Array,
@@ -132,53 +134,44 @@ export default {
     },
     data: function() {
         return {
-            IS_INPUT: 0,
-            IS_OUTPUT: 1,
+            IS_INPUT: IS_INPUT,
+            IS_OUTPUT: IS_OUTPUT,
             current: 0,
             dataset: this.inputData,
             datasetHeaders: []
         };
     },
     beforeMount() {
-        if (!this.dataset) {
-            return (this.datasetHeaders = []);
-        }
-
         this.datasetHeaders = this.dataset[0].map((item, index) => {
             return {
                 name: item,
                 use: true,
-                isInput: this.IS_INPUT,
+                isInput: IS_INPUT,
                 index: index
             };
         });
     },
     computed: {
         usedHeaders: function() {
-            if (!this.datasetHeaders) return [];
             return this.datasetHeaders.filter(item => item.use === true);
         },
         pages: function() {
-            if (this.dataset && this.dataset.length > 10) {
-                return Math.floor(this.dataset.length / 10);
-            }
-            return 0;
-        },
-        previewData: function() {
-            return this.dataset && this.dataset.slice(1, 5);
+            return this.dataset ? Math.floor(this.dataset.length / 10) : 0;
         },
         errors: function() {
             const errors = [];
 
+            // check input node count
             let headerCount = this.usedHeaders.filter(
-                item => item.isInput === this.IS_INPUT
+                item => item.isInput === IS_INPUT
             ).length;
             if (headerCount === 0) {
                 errors.push("Input node count cannot be 0");
             }
 
+            // check output node count
             headerCount = this.usedHeaders.filter(
-                item => item.isInput === this.IS_OUTPUT
+                item => item.isInput === IS_OUTPUT
             ).length;
 
             if (headerCount === 0) {

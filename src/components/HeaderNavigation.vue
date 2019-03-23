@@ -34,9 +34,7 @@
                         id="submit-learn"
                         v-on:click="$emit('learn')"
                         :disabled="!canLearn"
-                    >
-                        {{ finishedLearning ? "Another GO!" : "Learn"}}
-                    </button>
+                    >{{ finishedLearning ? "Another GO!" : "Learn"}}</button>
                     <button
                         v-if="selected"
                         class="btn btn-primary my-2 my-sm-0"
@@ -44,7 +42,7 @@
                         id="submit-parse"
                         v-on:click="parseFile"
                     >Parse</button>
-                    
+
                     <button
                         v-if="selected || parsed"
                         class="ml-1 btn btn-info my-2 my-sm-0"
@@ -79,25 +77,20 @@ export default {
             this.$emit("reset");
         },
         parseFile: function() {
-            var curFiles = this.$refs.file.files;
-            if (curFiles.length === 0) {
+            if (this.$refs.file.files.length === 0) {
                 return;
             }
-            var self = this;
-            Papa.parse(curFiles[0], {
-                complete: function(results) {
-                    self.parsed = true;
-                    self.selected = false;
-                    self.$refs.file.value = null;
-                    self.$emit("processed", results);
+            Papa.parse(this.$refs.file.files[0], {
+                complete: results => {
+                    this.parsed = true;
+                    this.selected = false;
+                    this.$refs.file.value = null;
+                    this.$emit("processed", results);
                 }
             });
         },
         onFile: function() {
-            var curFiles = this.$refs.file.files;
-            if (curFiles.length > 0) {
-                this.selected = true;
-            }
+            this.selected = this.$refs.file.files.length !== 0;
         }
     }
 };

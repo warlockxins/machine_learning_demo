@@ -1,10 +1,7 @@
 <template>
-    <canvas
-        ref="canvas"
-        width="800"
-        height="1000"
-        style="border:1px solid #d3d3d3;"
-    >Your browser does not support the HTML5 canvas tag.</canvas>
+    <div class="bg-secondary node-graph">
+        <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+    </div>
 </template>
 
 <script>
@@ -23,6 +20,7 @@ export default {
     },
     mounted() {
         this.ctx = this.$refs.canvas.getContext("2d");
+        this.calculateDimensions();
     },
     methods: {
         calculateDimensions() {
@@ -36,38 +34,24 @@ export default {
             this.$refs.canvas.height = maxCount * this.offsetY;
         },
         drawNetwork: function() {
-            this.calculateDimensions();
-
             this.ctx.clearRect(
                 0,
                 0,
                 this.$refs.canvas.width,
                 this.$refs.canvas.height
             );
-            this.ctx.fillStyle = "#778899";
-            this.ctx.fillRect(
-                0,
-                0,
-                this.$refs.canvas.width,
-                this.$refs.canvas.height
-            );
 
-            for (
-                let indexX = 0;
-                indexX < this.network.m_layers.length;
-                indexX++
-            ) {
-                const layer = this.network.m_layers[indexX];
-                let layerTo;
-                if (indexX !== this.network.m_layers.length - 1) {
-                    layerTo = this.network.m_layers[indexX + 1];
-                }
-                this.drawLayer(layer, indexX, layerTo);
-            }
+            this.network.m_layers.forEach((layer, indexX) => {
+                this.drawLayer(
+                    layer,
+                    indexX,
+                    this.network.m_layers[indexX + 1]
+                );
+            });
         },
         drawLayer: function(layer, indexX, layerTo) {
             layer.forEach((node, indexY) => {
-                const x = this.circleSize * 2 + indexX * this.offsetX;
+                let x = this.circleSize * 2 + indexX * this.offsetX;
                 const y = this.circleSize + indexY * this.offsetY;
 
                 this.ctx.beginPath();
@@ -80,19 +64,20 @@ export default {
                     return;
                 }
 
-                const layerToX = x + this.circleSize;
+                x += this.circleSize;
+                const lineToX = (indexX + 1) * this.offsetX + this.circleSize;
                 this.ctx.lineWidth = 2;
+
                 node.m_outputWeights.forEach((lineConnection, indexLine) => {
                     this.ctx.beginPath();
-                    this.ctx.moveTo(layerToX, y);
+                    this.ctx.moveTo(x, y);
                     this.ctx.lineTo(
-                        (indexX + 1) * this.offsetX + this.circleSize,
+                        lineToX,
                         indexLine * this.offsetY + this.circleSize
                     );
 
                     const r = Math.floor((lineConnection.w + 1) * 255);
-                    const color = `rgb(${r}, ${r}, 0)`;
-                    this.ctx.strokeStyle = color;
+                    this.ctx.strokeStyle = `rgb(${r}, ${r}, 0)`;
                     this.ctx.stroke();
                 });
             });

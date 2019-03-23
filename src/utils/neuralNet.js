@@ -1,5 +1,6 @@
 import * as ml from "machine-learning";
 import { minPlusOne } from "./normalize";
+import { IS_INPUT, IS_OUTPUT } from "./constants";
 
 export default class NeuralNetwork {
     net = undefined;
@@ -9,27 +10,31 @@ export default class NeuralNetwork {
     dataset = [];
     normalized = false;
 
+    usedHeaders = [];
+
     inputNormalization = {};
 
     constructor(dataset, usedHeaders) {
+        this.dataset = dataset;
+        this.usedHeaders = usedHeaders;
+        this.setup();
+    }
+
+    setup() {
         this.net = new ml.NeuralNet();
 
-        const IS_INPUT = 0,
-            IS_OUTPUT = 1;
-
-        this.inputHeaders = usedHeaders.filter(
+        this.inputHeaders = this.usedHeaders.filter(
             item => item.isInput === IS_INPUT
         );
 
-        this.outputHeaders = usedHeaders.filter(
+        this.outputHeaders = this.usedHeaders.filter(
             item => item.isInput === IS_OUTPUT
         );
 
         this.inputVals.length = this.inputHeaders.length;
         this.outputVals.length = this.outputHeaders.length;
-        this.dataset = dataset;
 
-        const hiddenNodeCount = Math.ceil((usedHeaders.length * 2) / 3);
+        const hiddenNodeCount = Math.ceil((this.usedHeaders.length * 2) / 3);
 
         // remember to allow HiddenNode count selection
         this.net.setTopology(
