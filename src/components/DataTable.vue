@@ -1,16 +1,25 @@
 <template>
     <div class="table-responsive" v-if="datasetHeaders.length">
         <h3>Current data - {{errors.length === 0 ? "might be": "not"}} ready to Learn</h3>
+        <!-- errors -->
+        <ul class="list-group" v-if="errors.length">
+            <li
+                class="list-group-item list-group-item-warning"
+                v-for="(item, key) in errors"
+                :key="key"
+            >{{item}}</li>
+        </ul>
         <div
             class="alert alert-success"
             role="alert"
             v-if="clickableRows"
         >You can now click on table rows and see preddiction in action</div>
+        <!-- data table -->
         <table
             class="table table-striped table-sm table-bordered"
             :class="{'table-hover': clickableRows}"
         >
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
                         <div class="form-group form-check">
@@ -31,60 +40,71 @@
                 <!-- toggles for input/output -->
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <div v-if="header.use" class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                :name="'header' + header.name"
-                                :id="'fieldRadio1'+header.name"
-                                :value="IS_INPUT"
-                                checked
-                                v-model="header.isInput"
-                            >
-                            <label class="form-check-label" :for="'fieldRadio1'+header.name">input</label>
-                        </div>
-                        <div v-if="header.use" class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                :name="'header' + header.name"
-                                :id="'fieldRadio2'+header.name"
-                                :value="IS_OUTPUT"
-                                v-model="header.isInput"
-                            >
-                            <label class="form-check-label" :for="'fieldRadio2'+header.name">output</label>
-                        </div>
+                        <template v-if="header.use">
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    :name="'header' + header.name"
+                                    :id="'fieldRadio1'+header.name"
+                                    :value="IS_INPUT"
+                                    v-model="header.isInput"
+                                >
+                                <label
+                                    class="form-check-label"
+                                    :for="'fieldRadio1'+header.name"
+                                >input</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    :name="'header' + header.name"
+                                    :id="'fieldRadio2'+header.name"
+                                    :value="IS_OUTPUT"
+                                    v-model="header.isInput"
+                                >
+                                <label
+                                    class="form-check-label"
+                                    :for="'fieldRadio2'+header.name"
+                                >output</label>
+                            </div>
+                        </template>
                     </th>
                 </tr>
                 <!-- toggles for numeric/lable -->
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <div v-if="header.use" class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                :name="'numericRadio1' + header.name"
-                                :id="'numericRadio1'+header.name"
-                                value="true"
-                                checked
-                                v-model="header.isNumber"
-                            >
-                            <label
-                                class="form-check-label"
-                                :for="'numericRadio1'+header.name"
-                            >numeric</label>
-                        </div>
-                        <div v-if="header.use" class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                :name="'numericRadio2' + header.name"
-                                :id="'numericRadio2'+header.name"
-                                value="false"
-                                v-model="header.isNumber"
-                            >
-                            <label class="form-check-label" :for="'numericRadio2'+header.name">lable</label>
-                        </div>
+                        <template v-if="header.use">
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    :name="'numericRadio1' + header.name"
+                                    :id="'numericRadio1'+header.name"
+                                    value="true"
+                                    v-model="header.isNumber"
+                                >
+                                <label
+                                    class="form-check-label"
+                                    :for="'numericRadio1'+header.name"
+                                >numeric</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    :name="'numericRadio2' + header.name"
+                                    :id="'numericRadio2'+header.name"
+                                    value="false"
+                                    v-model="header.isNumber"
+                                >
+                                <label
+                                    class="form-check-label"
+                                    :for="'numericRadio2'+header.name"
+                                >lable</label>
+                            </div>
+                        </template>
                     </th>
                 </tr>
             </thead>
@@ -143,20 +163,12 @@
                 </li>
             </ul>
         </nav>
-
-        <!-- errors -->
-        <ul class="list-group" v-if="errors.length">
-            <li
-                class="list-group-item list-group-item-warning"
-                v-for="(item, key) in errors"
-                :key="key"
-            >{{item}}</li>
-        </ul>
     </div>
 </template>
 
 <script>
 import { IS_INPUT, IS_OUTPUT } from "../utils/constants";
+import { TableHeader } from "../utils/tableHeader";
 
 export default {
     props: {
@@ -173,15 +185,9 @@ export default {
         };
     },
     beforeMount() {
-        this.datasetHeaders = this.dataset[0].map((item, index) => {
-            return {
-                name: item,
-                use: true,
-                isInput: IS_INPUT,
-                index: index,
-                isNumber: true
-            };
-        });
+        this.datasetHeaders = this.dataset[0].map(
+            (name, index) => new TableHeader(name, true, IS_INPUT, true, index)
+        );
     },
     computed: {
         usedHeaders: function() {
