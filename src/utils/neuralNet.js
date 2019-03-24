@@ -25,8 +25,9 @@ export default class NeuralNetwork {
     setup() {
         this.net = new ml.NeuralNet();
 
-        this.inputVals.length = this.inputHeaders.length;
-        this.outputVals.length = this.outputHeaders.length;
+        // maybe later
+        // this.inputVals.length = this.inputHeaders.length;
+        // this.outputVals.length = this.outputHeaders.length;
 
         const totalCount = this.inputHeaders.length + this.outputHeaders.length;
         const hiddenNodeCount = Math.ceil((totalCount * 2) / 3);
@@ -50,6 +51,10 @@ export default class NeuralNetwork {
             this.inputHeaders.forEach(item => {
                 item.normalization.addItem(Number(record[item.index]));
             });
+
+            this.outputHeaders.forEach(item => {
+                item.normalization.addItem(Number(record[item.index]));
+            });
         }
 
         this.normalized = true;
@@ -62,29 +67,33 @@ export default class NeuralNetwork {
                 this.normalize();
             }
             //parse inputs
-            let stepCounter = 0;
+            // let stepCounter = 0;
             for (let i = 1; i < this.dataset.length - 1; i++) {
                 this.processRecord(this.dataset[i]);
                 this.net.backProp(this.outputVals);
 
-                stepCounter++;
-                if (stepCounter > 5) {
-                    stepCounter = 0;
-                    callback(Math.ceil((i / this.dataset.length) * 100));
-                }
+                // stepCounter++;
+                // if (stepCounter > 5) {
+                //     stepCounter = 0;
+                //     callback(Math.ceil((i / this.dataset.length) * 100));
+                // }
             }
             resolve();
         });
     }
     processRecord(record) {
-        this.inputHeaders.forEach((header, index) => {
-            this.inputVals[index] = header.normalization.normalize(
-                Number(record[header.index])
+        this.inputVals = [];
+        this.inputHeaders.forEach(header => {
+            this.inputVals.push(
+                header.normalization.normalize(record[header.index])
             );
         });
         // parse outputs
+        this.outputVals = [];
         this.outputHeaders.forEach((header, index) => {
-            this.outputVals[index] = Number(record[header.index]);
+            this.outputVals[index] = header.normalization.normalize(
+                record[header.index]
+            );
         });
 
         this.net.feedForward(this.inputVals);

@@ -1,11 +1,12 @@
-import { NumberNormalization } from "./normalize";
+import { NumberNormalization, LabelNormalization } from "./normalize";
 
 export class TrainingHeader {
     normalization = undefined;
     constructor(isNumber, index) {
         this.index = index;
-        if (isNumber === true) {
-            this.normalization = new NumberNormalization();
-        }
+
+        this.normalization = isNumber
+            ? new NumberNormalization()
+            : new LabelNormalization();
     }
 }

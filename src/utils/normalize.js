@@ -12,6 +12,30 @@ export class NumberNormalization {
     }
 
     normalize(num) {
-        return minPlusOne(num, { min: this.min, max: this.max });
+        return minPlusOne(Number(num), { min: this.min, max: this.max });
+    }
+
+    preprocess() {}
+}
+
+export class LabelNormalization {
+    labels = [];
+    vectors = {};
+
+    addItem(value) {
+        if (this.labels.indexOf(value) === -1) {
+            this.labels.push(value);
+        }
+    }
+
+    normalize = label => this.vectors[label];
+
+    preprocess() {
+        let arr;
+        this.labels.forEach(item => {
+            arr = Array(self.labelArray.length).fill(0);
+            arr[self.labelArray.indexOf(item)] = 1;
+            this.vectors[item] = arr;
+        });
     }
 }
