@@ -19,15 +19,16 @@ export default class NeuralNetwork {
             if (item.isInput === IS_INPUT) this.inputHeaders.push(header);
             else this.outputHeaders.push(header);
         });
-        this.setup();
     }
 
+    headerInputCount(header) {
+        return header.reduce((accumulator, item) => {
+            item.normalization.preprocess();
+            return accumulator + item.normalization.length;
+        }, 0);
+    }
     setup() {
         this.net = new ml.NeuralNet();
-
-        // maybe later
-        // this.inputVals.length = this.inputHeaders.length;
-        // this.outputVals.length = this.outputHeaders.length;
 
         const totalCount = this.inputHeaders.length + this.outputHeaders.length;
         const hiddenNodeCount = Math.ceil((totalCount * 2) / 3);
@@ -35,10 +36,10 @@ export default class NeuralNetwork {
         // remember to allow HiddenNode count selection
         this.net.setTopology(
             [
-                this.inputHeaders.length,
+                this.headerInputCount(this.inputHeaders),
                 hiddenNodeCount,
                 hiddenNodeCount,
-                this.outputHeaders.length
+                this.headerInputCount(this.outputHeaders)
             ],
             ml.transferFunction.tangent
         );
@@ -65,7 +66,9 @@ export default class NeuralNetwork {
             //normalize
             if (!this.normalized) {
                 this.normalize();
+                this.setup();
             }
+
             //parse inputs
             // let stepCounter = 0;
             for (let i = 1; i < this.dataset.length - 1; i++) {
@@ -100,6 +103,17 @@ export default class NeuralNetwork {
     }
     predictRecord(record) {
         this.processRecord(record);
+        const res = this.net.getResults();
+
+        const output = [];
+        let i = 0;
+        let val;
+        this.outputHeaders.forEach(header => {
+            val = res.slice(i, i + header.normalization.length);
+            i += header.normalization.length;
+            console.log(header.normalization.revert(val));
+        });
+
         return {
             results: this.net.getResults(),
             error: this.net.getRecentAverageError()

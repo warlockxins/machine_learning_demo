@@ -1,10 +1,16 @@
 export const zeroOne = (value, range) =>
     (value - range.min) / (range.max - range.min);
+
+export const zeroOneRevert = (value, range) =>
+    (value - range.min) / (range.max - range.min);
+
 export const minPlusOne = (value, range) => 2 * zeroOne(value, range) - 1;
+export const minPlusOneRevert = (value, range) => zeroOne(value, range) / 2 + 1;
 
 export class NumberNormalization {
     min = Number.POSITIVE_INFINITY;
     max = Number.NEGATIVE_INFINITY;
+    length = 1;
 
     addItem(num) {
         this.min = Math.min(this.min, num);
@@ -15,12 +21,17 @@ export class NumberNormalization {
         return minPlusOne(Number(num), { min: this.min, max: this.max });
     }
 
+    revert(num) {
+        return 1;
+    }
+
     preprocess() {}
 }
 
 export class LabelNormalization {
     labels = [];
     vectors = {};
+    length = 0;
 
     addItem(value) {
         if (this.labels.indexOf(value) === -1) {
@@ -37,5 +48,7 @@ export class LabelNormalization {
             arr[self.labelArray.indexOf(item)] = 1;
             this.vectors[item] = arr;
         });
+
+        this.length = this.labels.length;
     }
 }

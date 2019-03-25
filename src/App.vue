@@ -31,7 +31,11 @@
                     aria-valuemax="100"
                 >{{progress}}%</div>
             </div>
-            <node-graph v-if="currentNetwork" :network="currentNetwork.net" ref="graph"></node-graph>
+            <node-graph
+                v-if="currentNetwork && currentNetwork.net"
+                :network="currentNetwork.net"
+                ref="graph"
+            ></node-graph>
         </main>
     </div>
 </template>
