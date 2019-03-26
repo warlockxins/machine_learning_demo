@@ -2,10 +2,11 @@ export const zeroOne = (value, range) =>
     (value - range.min) / (range.max - range.min);
 
 export const zeroOneRevert = (value, range) =>
-    (value - range.min) / (range.max - range.min);
+    value * (range.max - range.min) + range.min;
 
 export const minPlusOne = (value, range) => 2 * zeroOne(value, range) - 1;
-export const minPlusOneRevert = (value, range) => zeroOne(value, range) / 2 + 1;
+export const minPlusOneRevert = (value, range) =>
+    (zeroOneRevert(value, range) + 1) / 2;
 
 export class NumberNormalization {
     min = Number.POSITIVE_INFINITY;
@@ -22,7 +23,7 @@ export class NumberNormalization {
     }
 
     revert(num) {
-        return 1;
+        return minPlusOneRevert(num, { min: this.min, max: this.max });
     }
 
     preprocess() {}

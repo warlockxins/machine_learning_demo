@@ -111,11 +111,11 @@ export default class NeuralNetwork {
         this.outputHeaders.forEach(header => {
             val = res.slice(i, i + header.normalization.length);
             i += header.normalization.length;
-            console.log(header.normalization.revert(val));
+            output.push(header.normalization.revert(val));
         });
 
         return {
-            results: this.net.getResults(),
+            results: output,
             error: this.net.getRecentAverageError()
         };
     }
