@@ -30,7 +30,9 @@ export default class NeuralNetwork {
     setup() {
         this.net = new ml.NeuralNet();
 
-        const totalCount = this.inputHeaders.length + this.outputHeaders.length;
+        this.inputVals.length = this.headerInputCount(this.inputHeaders);
+        this.outputVals.length = this.headerInputCount(this.outputHeaders);
+        const totalCount = this.inputVals.length + this.outputVals.length;
         const hiddenNodeCount = Math.ceil((totalCount * 2) / 3);
 
         // remember to allow HiddenNode count selection
@@ -63,7 +65,6 @@ export default class NeuralNetwork {
 
     train(callback) {
         return new Promise(resolve => {
-            //normalize
             if (!this.normalized) {
                 this.normalize();
                 this.setup();
@@ -85,22 +86,24 @@ export default class NeuralNetwork {
         });
     }
     processRecord(record) {
-        this.inputVals = [];
-        this.inputHeaders.forEach(header => {
-            this.inputVals.push(
-                header.normalization.normalize(record[header.index])
-            );
-        });
-        // parse outputs
-        this.outputVals = [];
-        this.outputHeaders.forEach((header, index) => {
-            this.outputVals[index] = header.normalization.normalize(
-                record[header.index]
-            );
-        });
+        this.recordToHeaders(record, this.inputHeaders, this.inputVals);
+        this.recordToHeaders(record, this.outputHeaders, this.outputVals);
 
         this.net.feedForward(this.inputVals);
     }
+
+    recordToHeaders(record, headerSet, valueSet) {
+        let i = 0;
+        headerSet.forEach(header => {
+            valueSet.splice(
+                i,
+                header.normalization.length,
+                header.normalization.normalize(record[header.index])
+            );
+            i += header.normalization.length;
+        });
+    }
+
     predictRecord(record) {
         this.processRecord(record);
         const res = this.net.getResults();

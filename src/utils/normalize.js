@@ -41,6 +41,9 @@ export class LabelNormalization {
     }
 
     normalize = label => this.vectors[label];
+    revert(vals) {
+        return vals;
+    }
 
     preprocess() {
         let arr;
