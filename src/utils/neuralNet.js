@@ -52,11 +52,11 @@ export default class NeuralNetwork {
             const record = this.dataset[i];
 
             this.inputHeaders.forEach(item => {
-                item.normalization.addItem(Number(record[item.index]));
+                item.normalization.addItem(record[item.index]);
             });
 
             this.outputHeaders.forEach(item => {
-                item.normalization.addItem(Number(record[item.index]));
+                item.normalization.addItem(record[item.index]);
             });
         }
 
@@ -95,11 +95,22 @@ export default class NeuralNetwork {
     recordToHeaders(record, headerSet, valueSet) {
         let i = 0;
         headerSet.forEach(header => {
-            valueSet.splice(
-                i,
-                header.normalization.length,
-                header.normalization.normalize(record[header.index])
+            const normalizedValue = header.normalization.normalize(
+                record[header.index]
             );
+            if (normalizedValue instanceof Array) {
+                valueSet.splice(
+                    i,
+                    header.normalization.length,
+                    ...normalizedValue
+                );
+            } else {
+                valueSet.splice(
+                    i,
+                    header.normalization.length,
+                    normalizedValue
+                );
+            }
             i += header.normalization.length;
         });
     }

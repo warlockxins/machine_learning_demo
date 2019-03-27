@@ -5,8 +5,9 @@ export class TrainingHeader {
     constructor(isNumber, index) {
         this.index = index;
 
-        this.normalization = isNumber
-            ? new NumberNormalization()
-            : new LabelNormalization();
+        this.normalization =
+            isNumber === true
+                ? new NumberNormalization()
+                : new LabelNormalization();
     }
 }

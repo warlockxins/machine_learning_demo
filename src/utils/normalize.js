@@ -14,8 +14,9 @@ export class NumberNormalization {
     length = 1;
 
     addItem(num) {
-        this.min = Math.min(this.min, num);
-        this.max = Math.max(this.max, num);
+        const n = Number(num);
+        this.min = Math.min(this.min, n);
+        this.max = Math.max(this.max, n);
     }
 
     normalize(num) {
@@ -40,16 +41,18 @@ export class LabelNormalization {
         }
     }
 
-    normalize = label => this.vectors[label];
+    normalize(label) {
+        return this.vectors[label];
+    }
     revert(vals) {
         return vals;
     }
 
     preprocess() {
         let arr;
-        this.labels.forEach(item => {
-            arr = Array(self.labelArray.length).fill(0);
-            arr[self.labelArray.indexOf(item)] = 1;
+        this.labels.forEach((item, index) => {
+            arr = Array(this.labels.length).fill(0);
+            arr[index] = 1;
             this.vectors[item] = arr;
         });
 
