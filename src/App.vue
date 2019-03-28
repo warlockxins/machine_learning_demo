@@ -82,8 +82,8 @@ export default {
 
             this.dataset = results.data;
         },
-        startLearning: function() {
-            if (!this.canLearn) {
+        startLearning: async function() {
+            if (!this.canLearn || this.isTraining) {
                 return;
             }
 
@@ -99,10 +99,13 @@ export default {
             }
 
             this.isTraining = true;
+            this.progress = 0;
+
             this.$nextTick(async () => {
                 await this.currentNetwork.train(progress => {
                     this.progress = progress;
                 });
+
                 this.isTraining = false;
                 this.finishedLearning = true;
                 this.$nextTick(() => {

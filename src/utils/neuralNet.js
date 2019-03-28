@@ -64,27 +64,51 @@ export default class NeuralNetwork {
     }
 
     train(callback) {
-        return new Promise(resolve => {
+        return new Promise(async resolve => {
             if (!this.normalized) {
                 this.normalize();
                 this.setup();
             }
 
-            //parse inputs
-            // let stepCounter = 0;
-            for (let i = 1; i < this.dataset.length - 1; i++) {
-                this.processRecord(this.dataset[i]);
-                this.net.backProp(this.outputVals);
+            let chunks = [];
+            let i = 1;
+            let nextI = 0;
+            const step = 10;
+            while (i < this.dataset.length - 1) {
+                nextI = Math.min(i + step, this.dataset.length - 1);
+                chunks.push({ start: i, end: nextI });
+                i += step;
+            }
 
-                // stepCounter++;
-                // if (stepCounter > 5) {
-                //     stepCounter = 0;
-                //     callback(Math.ceil((i / this.dataset.length) * 100));
-                // }
+            const repetitions = 5;
+            const maxChunks = chunks.length * repetitions;
+
+            for (let repeats = 0; repeats < repetitions; repeats++) {
+                for (let i = 0; i < chunks.length; i++) {
+                    await this.processChunk(chunks[i]);
+
+                    callback(
+                        Math.ceil(((repeats * step + i) / maxChunks) * 100)
+                    );
+                }
             }
             resolve();
         });
     }
+
+    processChunk(item) {
+        return new Promise(resolveChunk => {
+            for (let i = item.start; i < item.end; i++) {
+                this.processRecord(this.dataset[i]);
+                this.net.backProp(this.outputVals);
+            }
+
+            setTimeout(() => {
+                resolveChunk();
+            }, 10);
+        });
+    }
+
     processRecord(record) {
         this.recordToHeaders(record, this.inputHeaders, this.inputVals);
         this.recordToHeaders(record, this.outputHeaders, this.outputVals);
