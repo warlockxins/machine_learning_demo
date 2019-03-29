@@ -12,6 +12,8 @@ export default class NeuralNetwork {
     inputHeaders = [];
     outputHeaders = [];
 
+    chunks = [];
+
     constructor(dataset, usedHeaders) {
         this.dataset = dataset;
         usedHeaders.map(item => {
@@ -68,27 +70,28 @@ export default class NeuralNetwork {
             if (!this.normalized) {
                 this.normalize();
                 this.setup();
-            }
 
-            let chunks = [];
-            let i = 1;
-            let nextI = 0;
-            const step = 10;
-            while (i < this.dataset.length - 1) {
-                nextI = Math.min(i + step, this.dataset.length - 1);
-                chunks.push({ start: i, end: nextI });
-                i += step;
+                let i = 1;
+                let nextI = 0;
+                const step = 50;
+                while (i < this.dataset.length - 1) {
+                    nextI = Math.min(i + step, this.dataset.length - 1);
+                    this.chunks.push({ start: i, end: nextI });
+                    i += step;
+                }
             }
 
             const repetitions = 5;
-            const maxChunks = chunks.length * repetitions;
+            const maxChunks = this.chunks.length * repetitions;
 
             for (let repeats = 0; repeats < repetitions; repeats++) {
-                for (let i = 0; i < chunks.length; i++) {
-                    await this.processChunk(chunks[i]);
-
+                for (let i = 0; i < this.chunks.length; i++) {
+                    await this.processChunk(this.chunks[i]);
                     callback(
-                        Math.ceil(((repeats * step + i) / maxChunks) * 100)
+                        Math.ceil(
+                            ((repeats * this.chunks.length + i) / maxChunks) *
+                                100
+                        )
                     );
                 }
             }
@@ -105,7 +108,7 @@ export default class NeuralNetwork {
 
             setTimeout(() => {
                 resolveChunk();
-            }, 10);
+            }, 20);
         });
     }
 

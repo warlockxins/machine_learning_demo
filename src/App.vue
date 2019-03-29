@@ -6,7 +6,18 @@
             v-on:reset="reset"
             :canLearn="canLearn"
             :finishedLearning="finishedLearning"
-        ></header-navigation>
+        >
+            <div v-if="isTraining" class="progress">
+                <div
+                    class="progress-bar"
+                    role="progressbar"
+                    :style="{width: `${progress}%`}"
+                    :aria-valuenow="progress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                ></div>
+            </div>
+        </header-navigation>
         <main role="main" class="container">
             <data-table
                 ref="dataTable"
@@ -21,16 +32,6 @@
                 <div>Error: {{ predictionError }}</div>
             </div>
 
-            <div v-if="isTraining" class="progress">
-                <div
-                    class="progress-bar"
-                    role="progressbar"
-                    :style="{width: `${progress}%`}"
-                    :aria-valuenow="progress"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                >{{progress}}%</div>
-            </div>
             <node-graph
                 v-if="currentNetwork && currentNetwork.net"
                 :network="currentNetwork.net"

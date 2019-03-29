@@ -34,7 +34,10 @@
                         id="submit-learn"
                         v-on:click="$emit('learn')"
                         :disabled="!canLearn"
-                    >{{ finishedLearning ? "Another GO!" : "Learn"}}</button>
+                    >
+                        {{ finishedLearning ? "Another GO!" : "Learn"}}
+                        <slot></slot>
+                    </button>
                     <button
                         v-if="selected"
                         class="btn btn-primary my-2 my-sm-0"

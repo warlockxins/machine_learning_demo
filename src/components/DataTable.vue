@@ -9,11 +9,7 @@
                 :key="key"
             >{{item}}</li>
         </ul>
-        <div
-            class="alert alert-success"
-            role="alert"
-            v-if="clickableRows"
-        >You can now click on table rows and see preddiction in action</div>
+
         <!-- data table -->
         <table
             class="table table-striped table-sm table-bordered"
