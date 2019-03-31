@@ -39,12 +39,15 @@ body > #app > .container {
     padding-left: 15px;
 }
 
+/* display node  */
+
 .node-graph {
     overflow-x: auto;
     text-align: center;
-    padding: 20px;
+    width: 100%;
 }
 
 .node-graph canvas {
     min-width: 500px;
+    display: inline-block;
 }

@@ -60,6 +60,7 @@
 
 <script>
 import Papa from "papaparse";
+const maxSize = 200285; // 200 kB
 
 export default {
     name: "header-navigation",
@@ -83,6 +84,12 @@ export default {
             if (this.$refs.file.files.length === 0) {
                 return;
             }
+            if (this.$refs.file.files[0].size > maxSize) {
+                alert("Sorry this File is too big!");
+                this.reset();
+                return;
+            }
+
             Papa.parse(this.$refs.file.files[0], {
                 complete: results => {
                     this.parsed = true;

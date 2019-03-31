@@ -1,6 +1,25 @@
 <template>
-    <div class="bg-secondary node-graph">
-        <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+    <div class="table-responsive">
+        <table class="bg-secondary node-graph">
+            <thead>
+                <tr>
+                    <td>Inputs</td>
+                    <td>Resulting NN</td>
+                    <td>Outputs with Error {{Math.ceil(error * 10000)/100}}%</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>some inputs</td>
+                    <td>
+                        <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                    </td>
+                    <td>
+                        <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -8,7 +27,9 @@
 const pi2 = 2 * Math.PI;
 export default {
     props: {
-        network: Object
+        network: Object,
+        predictions: Array,
+        error: Number
     },
     data: function() {
         return {

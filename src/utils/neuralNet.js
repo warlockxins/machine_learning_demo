@@ -73,7 +73,7 @@ export default class NeuralNetwork {
 
                 let i = 1;
                 let nextI = 0;
-                const step = 50;
+                const step = 150;
                 while (i < this.dataset.length - 1) {
                     nextI = Math.min(i + step, this.dataset.length - 1);
                     this.chunks.push({ start: i, end: nextI });
@@ -108,7 +108,7 @@ export default class NeuralNetwork {
 
             setTimeout(() => {
                 resolveChunk();
-            }, 20);
+            }, 50);
         });
     }
 
@@ -152,7 +152,12 @@ export default class NeuralNetwork {
         this.outputHeaders.forEach(header => {
             val = res.slice(i, i + header.normalization.length);
             i += header.normalization.length;
-            output.push(header.normalization.revert(val));
+            const revertedVal = header.normalization.revert(val);
+            if (revertedVal instanceof Array) {
+                output.push(...revertedVal);
+            } else {
+                output.push(revertedVal);
+            }
         });
 
         return {

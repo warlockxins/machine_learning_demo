@@ -27,14 +27,12 @@
                 v-on:validationChange="canLearn = $event"
                 :clickableRows="finishedLearning"
             ></data-table>
-            <div v-if="predictions.length">
-                <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
-                <div>Error: {{ predictionError }}</div>
-            </div>
 
             <node-graph
                 v-if="currentNetwork && currentNetwork.net"
                 :network="currentNetwork.net"
+                :predictions="predictions"
+                :error="predictionError"
                 ref="graph"
             ></node-graph>
         </main>
