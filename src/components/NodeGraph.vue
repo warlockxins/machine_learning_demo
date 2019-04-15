@@ -4,8 +4,8 @@
             <thead>
                 <tr>
                     <td>Inputs</td>
-                    <td>Resulting NN</td>
-                    <td>Outputs with Error {{Math.ceil(error * 10000)/100}}%</td>
+                    <td>Neural Network</td>
+                    <td>Outputs with Error {{ Math.ceil(error * 10000)/100 }}%</td>
                 </tr>
             </thead>
             <tbody>
@@ -15,7 +15,13 @@
                         <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
                     </td>
                     <td>
-                        <div v-for="(item, key) in predictions" :key="key">{{item}}</div>
+                        <div v-for="(item, key) in predictions" :key="key" class="output-val">
+                            <span
+                                v-if="(item instanceof Object)"
+                                :style="{color: valueColor(item.value)}"
+                            >{{ item.key }}: {{ item.value }}</span>
+                            <span v-else>{{ item }}</span>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -71,9 +77,13 @@ export default {
             });
         },
         drawLayer: function(layer, indexX, layerTo) {
+            let x = 0;
+            let y = 0;
+            let lineToX = 0;
+
             layer.forEach((node, indexY) => {
-                let x = this.circleSize * 2 + indexX * this.offsetX;
-                const y = this.circleSize + indexY * this.offsetY;
+                x = this.circleSize * 2 + indexX * this.offsetX;
+                y = this.circleSize + indexY * this.offsetY;
 
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, this.circleSize, 0, pi2);
@@ -86,7 +96,7 @@ export default {
                 }
 
                 x += this.circleSize;
-                const lineToX = (indexX + 1) * this.offsetX + this.circleSize;
+                lineToX = (indexX + 1) * this.offsetX + this.circleSize;
                 this.ctx.lineWidth = 2;
 
                 node.m_outputWeights.forEach((lineConnection, indexLine) => {
@@ -97,11 +107,18 @@ export default {
                         indexLine * this.offsetY + this.circleSize
                     );
 
-                    const r = Math.floor((lineConnection.w + 1) * 255);
-                    this.ctx.strokeStyle = `rgb(${r}, ${r}, 0)`;
+                    this.ctx.strokeStyle = this.weigthColor(lineConnection.w);
                     this.ctx.stroke();
                 });
             });
+        },
+        weigthColor: function(value) {
+            const r = Math.floor((value + 1) * 255);
+            return `rgb(${r}, ${r}, 0)`;
+        },
+        valueColor: function(value) {
+            const r = Math.max(0.5, Math.floor(value * 255));
+            return `rgb(${r}, ${r}, ${r})`;
         }
     }
 };

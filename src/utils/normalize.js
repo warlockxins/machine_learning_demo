@@ -31,30 +31,30 @@ export class NumberNormalization {
 }
 
 export class LabelNormalization {
-    labels = [];
+    keys = [];
     vectors = {};
     length = 0;
 
     addItem(value) {
-        if (this.labels.indexOf(value) === -1) {
-            this.labels.push(value);
+        if (!this.vectors[value]) {
+            this.vectors[value] = [];
         }
     }
 
     normalize(label) {
         return this.vectors[label];
     }
+
     revert = vals =>
-        this.labels.map((item, index) => ({ [item]: vals[index] }));
+        this.keys.map((item, index) => ({ key: item, value: vals[index] }));
 
     preprocess() {
-        let arr;
-        this.labels.forEach((item, index) => {
-            arr = Array(this.labels.length).fill(0);
-            arr[index] = 1;
-            this.vectors[item] = arr;
-        });
+        this.keys = Object.keys(this.vectors);
+        this.length = this.keys.length;
 
-        this.length = this.labels.length;
+        this.keys.forEach((key, index) => {
+            this.vectors[key] = Array(this.length).fill(0);
+            this.vectors[key][index] = 1;
+        });
     }
 }

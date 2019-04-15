@@ -43,8 +43,27 @@ body > #app > .container {
 
 .node-graph {
     overflow-x: auto;
-    text-align: center;
     width: 100%;
+    color: #ffffff;
+}
+
+.node-graph thead {
+    text-align: center;
+    font-weight: bold;
+}
+
+.node-graph thead td {
+    padding: 5px;
+}
+
+.node-graph td {
+    vertical-align: top;
+}
+
+.node-graph .output-val {
+    height: 110px;
+    padding-top: 10px;
+    font-weight: bold;
 }
 
 .node-graph canvas {
