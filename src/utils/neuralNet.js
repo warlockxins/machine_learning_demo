@@ -16,8 +16,9 @@ export default class NeuralNetwork {
 
     constructor(dataset, usedHeaders) {
         this.dataset = dataset;
+        let header;
         usedHeaders.map(item => {
-            const header = new TrainingHeader(item.isNumber, item.index);
+            header = new TrainingHeader(item.isNumber, item.index);
             if (item.isInput === IS_INPUT) this.inputHeaders.push(header);
             else this.outputHeaders.push(header);
         });
@@ -121,11 +122,12 @@ export default class NeuralNetwork {
 
     recordToHeaders(record, headerSet, valueSet) {
         let i = 0;
+        let normalizedValue;
         headerSet.forEach(header => {
-            const normalizedValue = header.normalization.normalize(
+            normalizedValue = header.normalization.normalize(
                 record[header.index]
             );
-            if (normalizedValue instanceof Array) {
+            if (header.normalization.isLabel) {
                 valueSet.splice(
                     i,
                     header.normalization.length,

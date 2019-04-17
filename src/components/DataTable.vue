@@ -72,34 +72,12 @@
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
                         <template v-if="header.use">
-                            <div class="form-check form-check-inline">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    :name="'numericRadio1' + header.name"
-                                    :id="'numericRadio1'+header.name"
-                                    value="true"
-                                    v-model="header.isNumber"
-                                >
-                                <label
-                                    class="form-check-label"
-                                    :for="'numericRadio1'+header.name"
-                                >numeric</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    :name="'numericRadio2' + header.name"
-                                    :id="'numericRadio2'+header.name"
-                                    value="false"
-                                    v-model="header.isNumber"
-                                >
-                                <label
-                                    class="form-check-label"
-                                    :for="'numericRadio2'+header.name"
-                                >lable</label>
-                            </div>
+                            <input-radio
+                                :items="valueTypes"
+                                :value="header.isNumber"
+                                @change="header.isNumber = $event"
+                                :name="header.name + 'type'"
+                            ></input-radio>
                         </template>
                     </th>
                 </tr>
@@ -165,8 +143,12 @@
 <script>
 import { IS_INPUT, IS_OUTPUT } from "../utils/constants";
 import { TableHeader } from "../utils/tableHeader";
+import InputRadio from "./InputRadio";
 
 export default {
+    components: {
+        InputRadio
+    },
     props: {
         inputData: Array,
         clickableRows: Boolean
@@ -177,7 +159,11 @@ export default {
             IS_OUTPUT: IS_OUTPUT,
             current: 0,
             dataset: this.inputData,
-            datasetHeaders: []
+            datasetHeaders: [],
+            valueTypes: [
+                { label: "Numeric", value: true },
+                { label: "Label", value: false }
+            ]
         };
     },
     beforeMount() {

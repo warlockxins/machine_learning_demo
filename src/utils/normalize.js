@@ -12,6 +12,7 @@ export class NumberNormalization {
     min = Number.POSITIVE_INFINITY;
     max = Number.NEGATIVE_INFINITY;
     length = 1;
+    isLabel = false;
 
     addItem(num) {
         const n = Number(num);
@@ -34,6 +35,7 @@ export class LabelNormalization {
     keys = [];
     vectors = {};
     length = 0;
+    isLabel = true;
 
     addItem(value) {
         if (!this.vectors[value]) {
