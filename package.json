@@ -27,6 +27,7 @@
     },
     "homepage": "https://github.com/warlockxins/machine_learning_demo#readme",
     "dependencies": {
+        "bulma": "^0.7.4",
         "machine-learning": "git+https://bitbucket.org/asemionov/machine_learning.git",
         "papaparse": "^4.5.0",
         "vue": "^2.5.21"

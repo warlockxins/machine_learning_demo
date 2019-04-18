@@ -1,16 +1,22 @@
 <template>
     <div>
-        <div class="form-check form-check-inline" v-for="(item, index) in items" :key="item.label">
-            <input
-                class="form-check-input"
-                type="radio"
-                :id="name + index"
-                :name="name"
-                :value="item.value"
-                v-model="current"
-                @change="$emit('change', item.value)"
+        <div class="control">
+            <label
+                class="radio"
+                :for="name + index"
+                v-for="(item, index) in items"
+                :key="item.label"
             >
-            <label class="form-check-label" :for="name + index">{{ item.label }}</label>
+                <input
+                    type="radio"
+                    :id="name + index"
+                    :name="name"
+                    :value="item.value"
+                    v-model="current"
+                    @change="$emit('change', item.value)"
+                >
+                {{ item.label }}
+            </label>
         </div>
     </div>
 </template>

@@ -1,32 +1,30 @@
 <template>
-    <div class="table-responsive">
-        <table class="bg-secondary node-graph">
-            <thead>
-                <tr>
-                    <td>Inputs</td>
-                    <td>Neural Network</td>
-                    <td>Outputs with Error {{ Math.ceil(error * 10000)/100 }}%</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>some inputs</td>
-                    <td>
-                        <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
-                    </td>
-                    <td>
-                        <div v-for="(item, key) in predictions" :key="key" class="output-val">
-                            <span
-                                v-if="(item instanceof Object)"
-                                :style="{color: valueColor(item.value)}"
-                            >{{ item.key }}: {{ item.value }}</span>
-                            <span v-else>{{ item }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <table class="has-background-grey node-graph">
+        <thead>
+            <tr>
+                <td>Inputs</td>
+                <td>Neural Network</td>
+                <td>Outputs with Error {{ Math.ceil(error * 10000)/100 }}%</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>some inputs</td>
+                <td>
+                    <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                </td>
+                <td>
+                    <div v-for="(item, key) in predictions" :key="key" class="output-val">
+                        <span
+                            v-if="(item instanceof Object)"
+                            :style="{color: valueColor(item.value)}"
+                        >{{ item.key }}: {{ item.value }}</span>
+                        <span v-else>{{ item }}</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </template>
 
 <script>

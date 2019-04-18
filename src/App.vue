@@ -6,18 +6,13 @@
             v-on:reset="reset"
             :canLearn="canLearn"
             :finishedLearning="finishedLearning"
-        >
-            <div v-if="isTraining" class="progress">
-                <div
-                    class="progress-bar"
-                    role="progressbar"
-                    :style="{width: `${progress}%`}"
-                    :aria-valuenow="progress"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                ></div>
-            </div>
-        </header-navigation>
+        ></header-navigation>
+        <progress
+            v-if="isTraining"
+            class="progress is-small"
+            :value="progress"
+            max="100"
+        >{{progress}}</progress>
         <main role="main" class="container">
             <data-table
                 ref="dataTable"
