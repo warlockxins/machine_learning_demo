@@ -36,49 +36,25 @@
                 <!-- toggles for input/output -->
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <template v-if="header.use">
-                            <div class="form-check form-check-inline">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    :name="'header' + header.name"
-                                    :id="'fieldRadio1'+header.name"
-                                    :value="IS_INPUT"
-                                    v-model="header.isInput"
-                                >
-                                <label
-                                    class="form-check-label"
-                                    :for="'fieldRadio1'+header.name"
-                                >input</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input
-                                    class="form-check-input"
-                                    type="radio"
-                                    :name="'header' + header.name"
-                                    :id="'fieldRadio2'+header.name"
-                                    :value="IS_OUTPUT"
-                                    v-model="header.isInput"
-                                >
-                                <label
-                                    class="form-check-label"
-                                    :for="'fieldRadio2'+header.name"
-                                >output</label>
-                            </div>
-                        </template>
+                        <input-radio
+                            v-if="header.use"
+                            :items="inputTypes"
+                            :value="header.isInput"
+                            @change="header.isInput = $event"
+                            :name="header.name + 'inType'"
+                        ></input-radio>
                     </th>
                 </tr>
                 <!-- toggles for numeric/lable -->
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <template v-if="header.use">
-                            <input-radio
-                                :items="valueTypes"
-                                :value="header.isNumber"
-                                @change="header.isNumber = $event"
-                                :name="header.name + 'type'"
-                            ></input-radio>
-                        </template>
+                        <input-radio
+                            v-if="header.use"
+                            :items="valueTypes"
+                            :value="header.isNumber"
+                            @change="header.isNumber = $event"
+                            :name="header.name + 'valType'"
+                        ></input-radio>
                     </th>
                 </tr>
             </thead>
@@ -155,14 +131,16 @@ export default {
     },
     data: function() {
         return {
-            IS_INPUT: IS_INPUT,
-            IS_OUTPUT: IS_OUTPUT,
             current: 0,
             dataset: this.inputData,
             datasetHeaders: [],
             valueTypes: [
                 { label: "Numeric", value: true },
                 { label: "Label", value: false }
+            ],
+            inputTypes: [
+                { label: "Input", value: IS_INPUT },
+                { label: "Output", value: IS_OUTPUT }
             ]
         };
     },
