@@ -46,3 +46,9 @@ body > #app > .container {
 .pagination {
     padding: 10px 10px 20px;
 }
+
+.navbar-item img {
+    width: 112px;
+    max-height: 40px;
+    object-fit: contain;
+}

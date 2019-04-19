@@ -6,7 +6,10 @@
     >
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item">Machine Learning</a>
+                <a class="navbar-item">
+                    <img src="@/assets/header-logo.png">
+                    Machine Learning
+                </a>
                 <a
                     role="button"
                     class="navbar-burger burger"
