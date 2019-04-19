@@ -1,5 +1,5 @@
 <template>
-    <table class="has-background-grey node-graph">
+    <table class="box node-graph">
         <thead>
             <tr>
                 <td>Inputs</td>
@@ -17,7 +17,7 @@
                     <div v-for="(item, key) in predictions" :key="key" class="output-val">
                         <span
                             v-if="(item instanceof Object)"
-                            :style="{color: valueColor(item.value)}"
+                            :style="{opacity: valueOpacity(item.value)}"
                         >{{ item.key }}: {{ item.value }}</span>
                         <span v-else>{{ item }}</span>
                     </div>
@@ -38,9 +38,9 @@ export default {
     data: function() {
         return {
             ctx: null,
-            circleSize: 30,
+            circleSize: 20,
             offsetX: 60 * 2 + 40,
-            offsetY: 50 * 2 + 10
+            offsetY: 40 * 2
         };
     },
     mounted() {
@@ -81,13 +81,12 @@ export default {
 
             layer.forEach((node, indexY) => {
                 x = this.circleSize * 2 + indexX * this.offsetX;
-                y = this.circleSize + indexY * this.offsetY;
+                y = this.circleSize + indexY * this.offsetY + 10;
 
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, this.circleSize, 0, pi2);
-                this.ctx.strokeStyle = "#cdb79e";
-                this.ctx.lineWidth = 5;
-                this.ctx.stroke();
+                this.ctx.fillStyle = "#00d1b2";
+                this.ctx.fill();
 
                 if (!layerTo) {
                     return;
@@ -102,7 +101,7 @@ export default {
                     this.ctx.moveTo(x, y);
                     this.ctx.lineTo(
                         lineToX,
-                        indexLine * this.offsetY + this.circleSize
+                        indexLine * this.offsetY + this.circleSize + 10
                     );
 
                     this.ctx.strokeStyle = this.weigthColor(lineConnection.w);
@@ -112,11 +111,10 @@ export default {
         },
         weigthColor: function(value) {
             const r = Math.floor((value + 1) * 255);
-            return `rgb(${r}, ${r}, 0)`;
+            return `rgb(${r}, ${r / 2}, 0)`;
         },
-        valueColor: function(value) {
-            const r = Math.max(0.5, Math.floor(value * 255));
-            return `rgb(${r}, ${r}, ${r})`;
+        valueOpacity: function(value) {
+            return Math.max(0.3, value);
         }
     }
 };

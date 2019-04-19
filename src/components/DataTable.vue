@@ -83,7 +83,7 @@
             >Next</a>
             <ul class="pagination-list">
                 <li
-                    :class="{'active': item === current}"
+                    :class="{'is-current': item === current}"
                     v-for="(item, index) in pageRegion"
                     :key="index"
                 >
