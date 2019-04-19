@@ -1,29 +1,41 @@
 <template>
-    <nav class="navbar is-light is-fixed-top" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item">Machine Learning</a>
-            <a
-                role="button"
-                class="navbar-burger burger"
-                :class="{'is-active': menuExpanded}"
-                aria-label="menu"
-                aria-expanded="false"
-                data-target="navbar"
-                @click="menuExpanded = !menuExpanded"
-            >
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
+    <nav
+        class="navbar is-dark is-fixed-top has-shadow"
+        role="navigation"
+        aria-label="main navigation"
+    >
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item">Machine Learning</a>
+                <a
+                    role="button"
+                    class="navbar-burger burger"
+                    :class="{'is-active': menuExpanded}"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    data-target="navbar"
+                    @click="menuExpanded = !menuExpanded"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
 
-        <div id="navbar" class="navbar-menu" :class="{'is-active': menuExpanded}">
-            <div class="navbar-start"></div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <div class="field" v-if="!parsed">
-                            <div class="control">
+            <div id="navbar" class="navbar-menu" :class="{'is-active': menuExpanded}">
+                <div class="navbar-start">
+                    <a
+                        href="#"
+                        class="navbar-item has-text-primary"
+                        v-if="selected || parsed"
+                        type="button"
+                        v-on:click="reset"
+                    >Clear dataset</a>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="field is-grouped">
+                            <div class="control" v-if="!parsed">
                                 <input
                                     ref="file"
                                     class="input is-primary"
@@ -35,29 +47,22 @@
                                     v-on:change="onFile"
                                 >
                             </div>
+                            <button
+                                v-else
+                                class="button is-primary"
+                                type="button"
+                                id="submit-learn"
+                                v-on:click="$emit('learn')"
+                                :disabled="!canLearn"
+                            >Learn</button>
+                            <button
+                                v-if="selected"
+                                class="button is-primary"
+                                type="button"
+                                id="submit-parse"
+                                v-on:click="parseFile"
+                            >Parse</button>
                         </div>
-                        <button
-                            v-else
-                            class="button is-primary"
-                            type="button"
-                            id="submit-learn"
-                            v-on:click="$emit('learn')"
-                            :disabled="!canLearn"
-                        >{{ finishedLearning ? "Another GO!" : "Learn"}}</button>
-                        <button
-                            v-if="selected"
-                            class="button is-primary"
-                            type="button"
-                            id="submit-parse"
-                            v-on:click="parseFile"
-                        >Parse</button>
-
-                        <button
-                            v-if="selected || parsed"
-                            class="button is-light"
-                            type="button"
-                            v-on:click="reset"
-                        >Clear</button>
                     </div>
                 </div>
             </div>
@@ -67,11 +72,11 @@
 
 <script>
 import Papa from "papaparse";
-const maxSize = 200285; // 200 kB
+import { MAX_FILE_SIZE } from "../utils/constants.js";
 
 export default {
     name: "header-navigation",
-    props: ["canLearn", "finishedLearning"],
+    props: ["canLearn"],
     data: function() {
         return {
             menuExpanded: true,
@@ -92,7 +97,7 @@ export default {
             if (this.$refs.file.files.length === 0) {
                 return;
             }
-            if (this.$refs.file.files[0].size > maxSize) {
+            if (this.$refs.file.files[0].size > MAX_FILE_SIZE) {
                 alert("Sorry this File is too big!");
                 this.reset();
                 return;

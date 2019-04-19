@@ -5,7 +5,6 @@
             v-on:learn="startLearning"
             v-on:reset="reset"
             :canLearn="canLearn"
-            :finishedLearning="finishedLearning"
         ></header-navigation>
         <progress
             v-if="isTraining"
