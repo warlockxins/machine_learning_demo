@@ -18,7 +18,8 @@
                                 <input
                                     type="checkbox"
                                     :id="'use'+ header.name"
-                                    v-model="header.use"
+                                    @change="$store.commit('setHeaderUsedMutation', {index, use: !header.use})"
+                                    :checked="header.use"
                                 >
                                 {{ header.name }}
                             </label>
@@ -32,7 +33,7 @@
                             v-if="header.use"
                             :items="inputTypes"
                             :value="header.isInput"
-                            @change="header.isInput = $event"
+                            @change="$store.commit('setHeaderIsInputMutation', {index, isInput: $event})"
                             :name="header.name + 'inType'"
                         ></input-radio>
                     </th>
@@ -111,7 +112,6 @@ export default {
     data: function() {
         return {
             current: 0,
-            datasetHeaders: this.$store.state.datasetHeaders,
             valueTypes: [
                 { label: "Numeric", value: true },
                 { label: "Label", value: false }
@@ -123,8 +123,8 @@ export default {
         };
     },
     computed: {
-        usedHeaders: function() {
-            return this.datasetHeaders.filter(item => item.use === true);
+        datasetHeaders: function() {
+            return this.$store.state.datasetHeaders;
         },
         pages: function() {
             return this.$store.state.dataset
@@ -135,7 +135,7 @@ export default {
             const errors = [];
 
             // check input node count
-            let headerCount = this.usedHeaders.filter(
+            let headerCount = this.$store.getters.usedHeaders.filter(
                 item => item.isInput === IS_INPUT
             ).length;
             if (headerCount === 0) {
@@ -143,7 +143,7 @@ export default {
             }
 
             // check output node count
-            headerCount = this.usedHeaders.filter(
+            headerCount = this.$store.getters.usedHeaders.filter(
                 item => item.isInput === IS_OUTPUT
             ).length;
 

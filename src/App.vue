@@ -68,12 +68,10 @@ export default {
 
             this.finishedLearning = false;
 
-            const { usedHeaders } = this.$refs.dataTable;
-
             if (!this.currentNetwork) {
                 this.currentNetwork = new NeuralNetwork(
                     this.$store.state.dataset,
-                    usedHeaders
+                    this.$store.getters.usedHeaders
                 );
             }
 

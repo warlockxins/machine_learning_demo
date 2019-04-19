@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import Papa from "papaparse";
 
 import { MAX_FILE_SIZE } from "../utils/constants.js";
-import { TableHeader } from "../utils/tableHeader";
+import { TableHeader } from "../utils/TableHeader";
 import { IS_INPUT } from "../utils/constants";
 
 Vue.use(Vuex);
@@ -13,10 +13,21 @@ export default new Vuex.Store({
         dataset: undefined,
         datasetHeaders: undefined
     },
+    getters: {
+        usedHeaders(state) {
+            return state.datasetHeaders.filter(item => item.use === true);
+        }
+    },
     mutations: {
         setDatasetMutation(state, { data, headers }) {
             state.dataset = data;
             state.datasetHeaders = headers;
+        },
+        setHeaderIsInputMutation(state, { index, isInput }) {
+            state.datasetHeaders[index].isInput = isInput;
+        },
+        setHeaderUsedMutation(state, { index, use }) {
+            state.datasetHeaders[index].use = use;
         }
     },
     actions: {
