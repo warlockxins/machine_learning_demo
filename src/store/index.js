@@ -21,7 +21,10 @@ export default new Vuex.Store({
     },
     actions: {
         deleteDataset({ commit }) {
-            commit("setDatasetMutation", undefined, undefined);
+            commit("setDatasetMutation", {
+                data: undefined,
+                datasetHeaders: undefined
+            });
         },
         createDatasetFromFile({ commit }, file) {
             return new Promise((resolve, reject) => {
