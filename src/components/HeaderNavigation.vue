@@ -37,7 +37,7 @@
                         <div class="field is-grouped">
                             <div class="control" v-if="!parsed">
                                 <input
-                                    ref="file"
+                                    ref="fileInput"
                                     class="input is-primary"
                                     type="file"
                                     placeholder="Upload.csv"
@@ -71,9 +71,6 @@
 </template>
 
 <script>
-import Papa from "papaparse";
-import { MAX_FILE_SIZE } from "../utils/constants.js";
-
 export default {
     name: "header-navigation",
     props: ["canLearn"],
@@ -88,32 +85,31 @@ export default {
         reset: function() {
             this.parsed = false;
             this.selected = false;
-            if (this.$refs.file) {
-                this.$refs.file.value = null;
+            if (this.$refs.fileInput) {
+                this.$refs.fileInput.value = null;
             }
             this.$emit("reset");
+            this.$store.dispatch("deleteDataset");
         },
-        parseFile: function() {
-            if (this.$refs.file.files.length === 0) {
-                return;
-            }
-            if (this.$refs.file.files[0].size > MAX_FILE_SIZE) {
-                alert("Sorry this File is too big!");
-                this.reset();
+        parseFile: async function() {
+            if (this.$refs.fileInput.files.length === 0) {
                 return;
             }
 
-            Papa.parse(this.$refs.file.files[0], {
-                complete: results => {
-                    this.parsed = true;
-                    this.selected = false;
-                    this.$refs.file.value = null;
-                    this.$emit("processed", results);
-                }
-            });
+            try {
+                await this.$store.dispatch(
+                    "createDatasetFromFile",
+                    this.$refs.fileInput.files[0]
+                );
+                this.parsed = true;
+                this.selected = false;
+                this.$refs.fileInput.value = null;
+            } catch (error) {
+                this.reset();
+            }
         },
         onFile: function() {
-            this.selected = this.$refs.file.files.length !== 0;
+            this.selected = this.$refs.fileInput.files.length !== 0;
         }
     }
 };

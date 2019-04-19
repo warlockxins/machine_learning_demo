@@ -99,7 +99,6 @@
 
 <script>
 import { IS_INPUT, IS_OUTPUT } from "../utils/constants";
-import { TableHeader } from "../utils/tableHeader";
 import InputRadio from "./InputRadio";
 
 export default {
@@ -107,14 +106,12 @@ export default {
         InputRadio
     },
     props: {
-        inputData: Array,
         clickableRows: Boolean
     },
     data: function() {
         return {
             current: 0,
-            dataset: this.inputData,
-            datasetHeaders: [],
+            datasetHeaders: this.$store.state.datasetHeaders,
             valueTypes: [
                 { label: "Numeric", value: true },
                 { label: "Label", value: false }
@@ -125,17 +122,14 @@ export default {
             ]
         };
     },
-    beforeMount() {
-        this.datasetHeaders = this.dataset[0].map(
-            (name, index) => new TableHeader(name, true, IS_INPUT, true, index)
-        );
-    },
     computed: {
         usedHeaders: function() {
             return this.datasetHeaders.filter(item => item.use === true);
         },
         pages: function() {
-            return this.dataset ? Math.floor(this.dataset.length / 10) : 0;
+            return this.$store.state.dataset
+                ? Math.floor(this.$store.state.dataset.length / 10)
+                : 0;
         },
         errors: function() {
             const errors = [];
@@ -182,7 +176,7 @@ export default {
         },
         currentDataset: function() {
             const start = this.current * 10 + 1;
-            return this.dataset.slice(start, start + 10);
+            return this.$store.state.dataset.slice(start, start + 10);
         }
     }
 };

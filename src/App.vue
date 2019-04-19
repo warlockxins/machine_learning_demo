@@ -1,11 +1,6 @@
 <template>
     <div id="app">
-        <header-navigation
-            v-on:processed="setData"
-            v-on:learn="startLearning"
-            v-on:reset="reset"
-            :canLearn="canLearn"
-        ></header-navigation>
+        <header-navigation v-on:learn="startLearning" v-on:reset="reset" :canLearn="canLearn"></header-navigation>
         <progress
             v-if="isTraining"
             class="progress is-small"
@@ -13,22 +8,22 @@
             max="100"
         >{{progress}}</progress>
         <main role="main" class="container">
-            <data-table
-                ref="dataTable"
-                v-if="dataset"
-                :inputData="dataset"
-                v-on:testRecord="testRecord"
-                v-on:validationChange="canLearn = $event"
-                :clickableRows="finishedLearning"
-            ></data-table>
+            <template v-if="$store.state.dataset">
+                <data-table
+                    ref="dataTable"
+                    v-on:testRecord="testRecord"
+                    v-on:validationChange="canLearn = $event"
+                    :clickableRows="finishedLearning"
+                ></data-table>
 
-            <node-graph
-                v-if="currentNetwork && currentNetwork.net"
-                :network="currentNetwork.net"
-                :predictions="predictions"
-                :error="predictionError"
-                ref="graph"
-            ></node-graph>
+                <node-graph
+                    v-if="currentNetwork && currentNetwork.net"
+                    :network="currentNetwork.net"
+                    :predictions="predictions"
+                    :error="predictionError"
+                    ref="graph"
+                ></node-graph>
+            </template>
         </main>
     </div>
 </template>
@@ -49,7 +44,6 @@ export default {
     },
     data: () => {
         return {
-            dataset: undefined,
             currentNetwork: undefined,
             progress: 0,
             isTraining: false,
@@ -61,19 +55,11 @@ export default {
     },
     methods: {
         reset: function() {
-            this.dataset = undefined;
             this.currentNetwork = undefined;
             this.isTraining = false;
             this.finishedLearning = false;
             this.predictions = [];
             this.predictionError = 0;
-        },
-        setData: function(results) {
-            if (!results) {
-                return this.reset();
-            }
-
-            this.dataset = results.data;
         },
         startLearning: async function() {
             if (!this.canLearn || this.isTraining) {
@@ -86,7 +72,7 @@ export default {
 
             if (!this.currentNetwork) {
                 this.currentNetwork = new NeuralNetwork(
-                    this.dataset,
+                    this.$store.state.dataset,
                     usedHeaders
                 );
             }
