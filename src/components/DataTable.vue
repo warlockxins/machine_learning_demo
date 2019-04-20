@@ -1,11 +1,16 @@
 <template>
     <div v-if="datasetHeaders.length">
-        <h3>Current data is {{errors.length === 0 ? "": "not"}} ready to Learn</h3>
-        <!-- errors -->
-        <div class="content">
-            <ul class="list-group" v-if="errors.length">
-                <li class="has-text-danger" v-for="(item, key) in errors" :key="key">{{item}}</li>
-            </ul>
+        <div
+            class="notification"
+            :class="{'is-primary': errors.length === 0, 'is-danger': errors.length > 0}"
+        >
+            <h3>Current data is {{errors.length === 0 ? "": "not"}} ready to Learn</h3>
+            <!-- errors -->
+            <div class="content">
+                <ul class="list-group" v-if="errors.length">
+                    <li v-for="(item, key) in errors" :key="key">{{item}}</li>
+                </ul>
+            </div>
         </div>
 
         <!-- data table -->
@@ -82,13 +87,10 @@
                 aria-label="Next"
             >Next</a>
             <ul class="pagination-list">
-                <li
-                    :class="{'is-current': item === current}"
-                    v-for="(item, index) in pageRegion"
-                    :key="index"
-                >
+                <li v-for="(item, index) in pageRegion" :key="index">
                     <a
                         class="pagination-link"
+                        :class="{'is-current': item === current}"
                         href="#"
                         v-on:click.prevent.stop="current = item"
                     >{{ item + 1 }}</a>

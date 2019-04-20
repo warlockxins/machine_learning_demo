@@ -1,24 +1,18 @@
-/* Sticky footer styles
--------------------------------------------------- */
 html {
     position: relative;
     min-height: 100%;
 }
 
 .progress {
-    position: absolute;
+    position: fixed;
+    z-index: 1;
+    bottom: 0;
 }
 
-body > #app > .container {
+.data-container {
     padding-top: 40px;
     padding-bottom: 40px;
 }
-
-.footer > .container {
-    padding-right: 15px;
-    padding-left: 15px;
-}
-
 /* display node  */
 
 .node-graph {

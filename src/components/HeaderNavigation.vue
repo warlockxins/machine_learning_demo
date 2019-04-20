@@ -1,9 +1,5 @@
 <template>
-    <nav
-        class="navbar is-dark is-fixed-top has-shadow"
-        role="navigation"
-        aria-label="main navigation"
-    >
+    <nav class="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item">
@@ -11,6 +7,7 @@
                     Machine Learning
                 </a>
                 <a
+                    v-if="$store.state.dataset"
                     role="button"
                     class="navbar-burger burger"
                     :class="{'is-active': menuExpanded}"
@@ -25,46 +22,30 @@
                 </a>
             </div>
 
-            <div id="navbar" class="navbar-menu" :class="{'is-active': menuExpanded}">
+            <div
+                id="navbar"
+                v-if="$store.state.dataset"
+                class="navbar-menu"
+                :class="{'is-active': menuExpanded}"
+            >
                 <div class="navbar-start">
-                    <a
-                        href="#"
-                        class="navbar-item has-text-primary"
-                        v-if="selected || parsed"
-                        type="button"
-                        v-on:click="reset"
-                    >Clear dataset</a>
+                    <a class="navbar-item" href="#" type="button" v-on:click="reset">
+                        <span class="icon has-text-primary">
+                            <img src="@/assets/rotate-ccw.svg">
+                        </span>
+                        <span href="#" class="navbar-item">Clear Dataset</span>
+                    </a>
                 </div>
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="field is-grouped">
-                            <div class="control" v-if="!parsed">
-                                <input
-                                    ref="fileInput"
-                                    class="input is-primary"
-                                    type="file"
-                                    placeholder="Upload.csv"
-                                    aria-label="Upload"
-                                    accept=".csv"
-                                    id="file"
-                                    v-on:change="onFile"
-                                >
-                            </div>
                             <button
-                                v-else
                                 class="button is-primary"
                                 type="button"
                                 id="submit-learn"
                                 v-on:click="$emit('learn')"
                                 :disabled="!canLearn"
                             >Learn</button>
-                            <button
-                                v-if="selected"
-                                class="button is-primary"
-                                type="button"
-                                id="submit-parse"
-                                v-on:click="parseFile"
-                            >Parse</button>
                         </div>
                     </div>
                 </div>
@@ -79,40 +60,13 @@ export default {
     props: ["canLearn"],
     data: function() {
         return {
-            menuExpanded: true,
-            parsed: false,
-            selected: false
+            menuExpanded: true
         };
     },
     methods: {
         reset: function() {
-            this.parsed = false;
-            this.selected = false;
-            if (this.$refs.fileInput) {
-                this.$refs.fileInput.value = null;
-            }
             this.$emit("reset");
             this.$store.dispatch("deleteDataset");
-        },
-        parseFile: async function() {
-            if (this.$refs.fileInput.files.length === 0) {
-                return;
-            }
-
-            try {
-                await this.$store.dispatch(
-                    "createDatasetFromFile",
-                    this.$refs.fileInput.files[0]
-                );
-                this.parsed = true;
-                this.selected = false;
-                this.$refs.fileInput.value = null;
-            } catch (error) {
-                this.reset();
-            }
-        },
-        onFile: function() {
-            this.selected = this.$refs.fileInput.files.length !== 0;
         }
     }
 };

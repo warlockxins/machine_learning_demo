@@ -1,14 +1,15 @@
 <template>
     <div id="app">
         <header-navigation v-on:learn="startLearning" v-on:reset="reset" :canLearn="canLearn"></header-navigation>
-        <progress
-            v-if="isTraining"
-            class="progress is-small"
-            :value="progress"
-            max="100"
-        >{{progress}}</progress>
-        <main role="main" class="container">
-            <template v-if="$store.state.dataset">
+
+        <main role="main">
+            <div class="container data-container" v-if="$store.state.dataset">
+                <progress
+                    v-if="isTraining"
+                    class="progress is-info"
+                    :value="progress"
+                    max="100"
+                >{{progress}}</progress>
                 <data-table
                     ref="dataTable"
                     v-on:testRecord="testRecord"
@@ -23,7 +24,8 @@
                     :error="predictionError"
                     ref="graph"
                 ></node-graph>
-            </template>
+            </div>
+            <index-page-component v-else></index-page-component>
         </main>
     </div>
 </template>
@@ -33,6 +35,7 @@ import "./css/sticky-footer-navbar.css";
 import HeaderNavigation from "./components/HeaderNavigation";
 import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
+import IndexPageComponent from "./components/IndexPage";
 import NeuralNetwork from "./utils/neuralNet";
 
 export default {
@@ -40,7 +43,8 @@ export default {
     components: {
         HeaderNavigation,
         DataTable,
-        NodeGraph
+        NodeGraph,
+        IndexPageComponent
     },
     data: () => {
         return {
