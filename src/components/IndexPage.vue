@@ -8,7 +8,7 @@
                         <h2 class="subtitle">A simple Neural Network in action</h2>
                     </div>
                     <div class="column">
-                        <div class="field">
+                        <div class="field" id="upload_field">
                             <div class="file is-large is-boxed is-centered" ref="fileDrop">
                                 <label class="file-label">
                                     <input
@@ -22,6 +22,7 @@
                                             <img src="@/assets/upload.svg">
                                         </span>
                                         <span class="file-label">Upload Your .CSV data</span>
+                                        <span class="file-label">200 KB MAX</span>
                                     </span>
                                 </label>
                             </div>
@@ -53,18 +54,46 @@
                 <p>
                     <b>This</b> project is aimed to teach beginners such as
                     <b>myself</b> to quickly grasp the main aspect of Machine learning -
-                    <b>Data.</b>
+                    <b>Data</b>. The data that you feel is important and want to make decisions on.
                 </p>
                 <br>
-                <h4 class="title is-4">Data</h4>
-                <p>To start off you have to decide the area you want to learn about and make proper predictions on.</p>
-                <p>You will have to understand the area/topic of interest.</p>
+                <h4 class="title is-4">The Data</h4>
+                <p>So to start off you have to decide the area you want to learn about and make proper predictions on.</p>
+                <p>
+                    You will have to understand the area/topic of interest. Just to have a proof of concept lets have the
+                    <b>following example</b>.
+                </p>
                 <p>
                     The traditional dataset to train on is
                     <a
                         rel="nofollow"
                         href="https://en.wikipedia.org/wiki/Iris_flower_data_set"
-                    >Iris flower dataset</a>
+                    >Iris flower dataset</a>. Its relevant data is available in CSV format
+                    <a
+                        rel="nofollow"
+                        href="/test-data/iris.csv"
+                    >Here</a> (right click and download).
+                </p>
+
+                <br>
+                <h4 class="title is-4">The Learning</h4>
+                <p>
+                    Once the dataset is decided, it's time to put it to test.
+                    <a
+                        href="#upload_field"
+                    >Upload the csv by dropping it on the box</a> waay up - here we'll use the
+                    <a rel="nofollow" href="/test-data/iris.csv">Iris CSV</a>. On the new screen you will see CSVs data, and notice that in the presented table you should select specific coulumns as
+                    <b>output/label</b> as displayed below.
+                </p>
+
+                <br>
+                <img class="box" src="@/assets/tutorial/tut1.png" alt="Select data inputs/outputs">
+                <br>
+
+                <p>
+                    Now when the data is setup, press Lean button in top right corner. This will only have a few learning steps done in the background.
+                    <br>At this point you can observe the Graph below the Table, and already test the Neural Network by clicking on any Tables record and see if the output/prediction is anyway similar to expected output.
+                    <br>If current prediction is off, then keep clicking on that "Learn" button and test outputs, also observing as Prediction error decreases (hopefully).
                 </p>
             </section>
         </div>
