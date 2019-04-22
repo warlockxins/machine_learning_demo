@@ -10,13 +10,13 @@
         <tbody>
             <tr>
                 <td>
-                    <div v-for="(item, key) in record" :key="key" class="output-val">{{item}}</div>
+                    <div v-for="(item, key) in record" :key="key" class="node-graph__row">{{item}}</div>
                 </td>
                 <td>
                     <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
                 </td>
                 <td>
-                    <div v-for="(item, key) in predictions" :key="key" class="output-val">
+                    <div v-for="(item, key) in predictions" :key="key" class="node-graph__row">
                         <span
                             v-if="(item instanceof Object)"
                             :style="{opacity: valueOpacity(item.value)}"

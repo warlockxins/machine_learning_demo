@@ -26,8 +26,8 @@ html {
     font-weight: bold;
 }
 
-.node-graph .output-val {
-    height: 80px;
+.node-graph .node-graph__row {
+    height: 85px;
     padding-top: 10px;
     font-weight: bold;
 }

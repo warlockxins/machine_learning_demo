@@ -37,10 +37,9 @@ export default class NeuralNetwork {
         if (!(this.inputHeaders.length && this.outputHeaders.length)) {
             throw "Invalid data";
         }
-        // remember to allow HiddenNode count selection
+        // remember to allow HiddenNode count selection !!!!!!
         const topology = [
             this.inputVals.length,
-            hiddenNodeCount,
             hiddenNodeCount,
             this.outputVals.length
         ];
