@@ -27,14 +27,26 @@ html {
 }
 
 .node-graph .node-graph__row {
-    height: 85px;
-    padding-top: 10px;
+    height: 50px;
+    line-height: 40px;
     font-weight: bold;
+    min-width: 100px;
+    position: relative;
 }
 
-.node-graph canvas {
-    min-width: 500px;
-    display: inline-block;
+.node-graph .node-graph__row::after {
+    content: "";
+    width: 20px;
+    border-top: 1px solid #000000;
+    position: absolute;
+    top: 20px;
+}
+
+.node-graph .node-graph__row_right::after {
+    right: -20px;
+}
+.node-graph .node-graph__row_left::after {
+    left: -40px;
 }
 
 .pagination {

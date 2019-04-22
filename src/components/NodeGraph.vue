@@ -10,13 +10,29 @@
         <tbody>
             <tr>
                 <td>
-                    <div v-for="(item, key) in record" :key="key" class="node-graph__row">{{item}}</div>
+                    <div
+                        v-for="(item, key) in record"
+                        :key="key"
+                        class="node-graph__row node-graph__row_right"
+                    >
+                        <input
+                            class="input"
+                            type="text"
+                            placeholder="Text input"
+                            :value="item"
+                            disabled
+                        >
+                    </div>
                 </td>
                 <td>
                     <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
                 </td>
                 <td>
-                    <div v-for="(item, key) in predictions" :key="key" class="node-graph__row">
+                    <div
+                        v-for="(item, key) in predictions"
+                        :key="key"
+                        class="node-graph__row node-graph__row_left"
+                    >
                         <span
                             v-if="(item instanceof Object)"
                             :style="{opacity: valueOpacity(item.value)}"
@@ -31,6 +47,9 @@
 
 <script>
 const pi2 = 2 * Math.PI;
+const circleSize = 20;
+const offsetX = 100;
+
 export default {
     props: {
         network: Object,
@@ -40,10 +59,7 @@ export default {
     },
     data: function() {
         return {
-            ctx: null,
-            circleSize: 20,
-            offsetX: 60 * 2 + 40,
-            offsetY: 40 * 2
+            ctx: null
         };
     },
     mounted() {
@@ -65,8 +81,8 @@ export default {
             });
 
             this.$refs.canvas.width =
-                this.network.net.m_layers.length * this.offsetX;
-            this.$refs.canvas.height = maxCount * this.offsetY;
+                this.network.net.m_layers.length * offsetX;
+            this.$refs.canvas.height = this.yCoord(maxCount);
         },
         drawNetwork: function() {
             this.ctx.clearRect(
@@ -90,11 +106,11 @@ export default {
             let lineToX = 0;
 
             layer.forEach((node, indexY) => {
-                x = this.circleSize * 2 + indexX * this.offsetX;
-                y = this.circleSize + indexY * this.offsetY + 10;
+                x = circleSize * 2 + indexX * offsetX;
+                y = this.yCoord(indexY);
 
                 this.ctx.beginPath();
-                this.ctx.arc(x, y, this.circleSize, 0, pi2);
+                this.ctx.arc(x, y, circleSize, 0, pi2);
                 this.ctx.fillStyle = "#00d1b2";
                 this.ctx.fill();
 
@@ -102,22 +118,23 @@ export default {
                     return;
                 }
 
-                x += this.circleSize;
-                lineToX = (indexX + 1) * this.offsetX + this.circleSize;
+                x += circleSize;
+                lineToX = (indexX + 1) * offsetX + circleSize;
                 this.ctx.lineWidth = 2;
 
                 node.m_outputWeights.forEach((lineConnection, indexLine) => {
                     this.ctx.beginPath();
                     this.ctx.moveTo(x, y);
-                    this.ctx.lineTo(
-                        lineToX,
-                        indexLine * this.offsetY + this.circleSize + 10
-                    );
+                    this.ctx.lineTo(lineToX, this.yCoord(indexLine));
 
                     this.ctx.strokeStyle = this.weigthColor(lineConnection.w);
                     this.ctx.stroke();
                 });
             });
+        },
+        yCoord(index) {
+            // Needs to align with `.node-graph .node-graph__row`
+            return (circleSize * 2 + 10) * index + circleSize;
         },
         weigthColor: function(value) {
             const r = Math.floor((value + 1) * 255);

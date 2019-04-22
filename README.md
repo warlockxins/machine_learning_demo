@@ -26,4 +26,4 @@ Then I click **Learn** button and observe cheated Node visual graph.
 
 When I click on a record row in the table, I observe text representation of predicted values.
 
-If I am not satsified with predicted values, I click **Another Go!** button.
+If I am not satsified with predicted values, I click **Learn** button.
