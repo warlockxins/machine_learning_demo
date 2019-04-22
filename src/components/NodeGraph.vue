@@ -9,7 +9,9 @@
         </thead>
         <tbody>
             <tr>
-                <td>some inputs</td>
+                <td>
+                    <div v-for="(item, key) in record" :key="key" class="output-val">{{item}}</div>
+                </td>
                 <td>
                     <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
                 </td>
@@ -33,7 +35,8 @@ export default {
     props: {
         network: Object,
         predictions: Array,
-        error: Number
+        error: Number,
+        record: Array
     },
     data: function() {
         return {

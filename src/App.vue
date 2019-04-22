@@ -19,6 +19,7 @@
                 <node-graph
                     v-if="currentNetwork"
                     :network="currentNetwork"
+                    :record="testRecordData"
                     :predictions="predictions"
                     :error="predictionError"
                     ref="graph"
@@ -36,6 +37,7 @@ import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
 import IndexPageComponent from "./components/IndexPage";
 import NeuralNetwork from "./utils/neuralNet";
+import { IS_INPUT } from "./utils/constants";
 
 export default {
     name: "app",
@@ -52,7 +54,8 @@ export default {
             canLearn: false,
             finishedLearning: false,
             predictions: [],
-            predictionError: 0
+            predictionError: 0,
+            testRecordData: []
         };
     },
     computed: {
@@ -98,8 +101,19 @@ export default {
             const { results, error } = this.currentNetwork.predictRecord(
                 record
             );
+
             this.predictions = results;
             this.predictionError = error;
+
+            this.testRecordData = this.$store.getters.usedHeaders.reduce(
+                (inputs, item) => {
+                    if (item.isInput === IS_INPUT) {
+                        inputs.push(record[item.index]);
+                    }
+                    return inputs;
+                },
+                []
+            );
         }
     }
 };

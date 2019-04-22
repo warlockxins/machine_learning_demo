@@ -33,7 +33,7 @@
                         <span class="icon has-text-primary">
                             <img src="@/assets/rotate-ccw.svg">
                         </span>
-                        <span href="#" class="navbar-item">Clear Dataset</span>
+                        <span href="#">Clear Dataset</span>
                     </a>
                 </div>
                 <div class="navbar-end">
