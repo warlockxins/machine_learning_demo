@@ -46,16 +46,23 @@ export default {
     mounted() {
         this.ctx = this.$refs.canvas.getContext("2d");
         this.calculateDimensions();
+        this.drawNetwork();
+    },
+    watch: {
+        network: function() {
+            this.calculateDimensions();
+            this.drawNetwork();
+        }
     },
     methods: {
         calculateDimensions() {
             let maxCount = 0;
-            this.network.m_layers.forEach(layer => {
+            this.network.net.m_layers.forEach(layer => {
                 maxCount = Math.max(maxCount, layer.length);
             });
 
             this.$refs.canvas.width =
-                this.network.m_layers.length * this.offsetX;
+                this.network.net.m_layers.length * this.offsetX;
             this.$refs.canvas.height = maxCount * this.offsetY;
         },
         drawNetwork: function() {
@@ -66,11 +73,11 @@ export default {
                 this.$refs.canvas.height
             );
 
-            this.network.m_layers.forEach((layer, indexX) => {
+            this.network.net.m_layers.forEach((layer, indexX) => {
                 this.drawLayer(
                     layer,
                     indexX,
-                    this.network.m_layers[indexX + 1]
+                    this.network.net.m_layers[indexX + 1]
                 );
             });
         },

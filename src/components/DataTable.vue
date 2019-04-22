@@ -14,7 +14,7 @@
         </div>
 
         <!-- data table -->
-        <table class="table is-striped is-fullwidth" :class="{'is-hoverable': clickableRows}">
+        <table class="table is-striped is-hoverable is-fullwidth">
             <thead>
                 <tr>
                     <th v-for="(header, index) in datasetHeaders" :key="index">
@@ -61,7 +61,7 @@
                 <tr
                     v-for="(row, index) in currentDataset"
                     :key="index"
-                    v-on:click="clickableRows && $emit('testRecord', row)"
+                    v-on:click="$emit('testRecord', row)"
                 >
                     <td
                         v-for="(cell, cellIndex) in row"
@@ -107,9 +107,6 @@ import InputRadio from "./InputRadio";
 export default {
     components: {
         InputRadio
-    },
-    props: {
-        clickableRows: Boolean
     },
     data: function() {
         return {

@@ -7,7 +7,6 @@ export default class NeuralNetwork {
     inputVals = [];
     outputVals = [];
     dataset = [];
-    normalized = false;
 
     inputHeaders = [];
     outputHeaders = [];
@@ -17,19 +16,16 @@ export default class NeuralNetwork {
     constructor(dataset, usedHeaders) {
         this.dataset = dataset;
         let header;
-        usedHeaders.map(item => {
+        usedHeaders.forEach(item => {
             header = new TrainingHeader(item.isNumber, item.index);
             if (item.isInput === IS_INPUT) this.inputHeaders.push(header);
             else this.outputHeaders.push(header);
         });
+
+        this.normalize();
+        this.setup();
     }
 
-    headerInputCount(header) {
-        return header.reduce((accumulator, item) => {
-            item.normalization.preprocess();
-            return accumulator + item.normalization.length;
-        }, 0);
-    }
     setup() {
         this.net = new ml.NeuralNet();
 
@@ -38,16 +34,25 @@ export default class NeuralNetwork {
         const totalCount = this.inputVals.length + this.outputVals.length;
         const hiddenNodeCount = Math.ceil((totalCount * 2) / 3);
 
+        if (!(this.inputHeaders.length && this.outputHeaders.length)) {
+            throw "Invalid data";
+        }
         // remember to allow HiddenNode count selection
-        this.net.setTopology(
-            [
-                this.headerInputCount(this.inputHeaders),
-                hiddenNodeCount,
-                hiddenNodeCount,
-                this.headerInputCount(this.outputHeaders)
-            ],
-            ml.transferFunction.tangent
-        );
+        const topology = [
+            this.inputVals.length,
+            hiddenNodeCount,
+            hiddenNodeCount,
+            this.outputVals.length
+        ];
+
+        this.net.setTopology(topology, ml.transferFunction.tangent);
+    }
+
+    headerInputCount(header) {
+        return header.reduce((accumulator, item) => {
+            item.normalization.preprocess();
+            return accumulator + item.normalization.length;
+        }, 0);
     }
 
     normalize() {
@@ -62,16 +67,11 @@ export default class NeuralNetwork {
                 item.normalization.addItem(record[item.index]);
             });
         }
-
-        this.normalized = true;
     }
 
     train(callback) {
         return new Promise(async resolve => {
-            if (!this.normalized) {
-                this.normalize();
-                this.setup();
-
+            if (!this.chunks.length) {
                 let i = 1;
                 let nextI = 0;
                 const step = 150;

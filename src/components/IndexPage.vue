@@ -82,7 +82,10 @@
                     <a
                         href="#upload_field"
                     >Upload the csv by dropping it on the box</a> waay up - here we'll use the
-                    <a rel="nofollow" href="/test-data/iris.csv">Iris CSV</a>. On the new screen you will see CSVs data, and notice that in the presented table you should select specific coulumns as
+                    <a
+                        rel="nofollow"
+                        href="/test-data/iris.csv"
+                    >Iris CSV</a>. On the new screen you will see CSVs data, and notice that in the presented table you should select specific coulumns as
                     <b>output/label</b> as displayed below.
                 </p>
 
@@ -91,9 +94,11 @@
                 <br>
 
                 <p>
-                    Now when the data is setup, press Lean button in top right corner. This will only have a few learning steps done in the background.
+                    Now when the data is setup, press
+                    <b>"Learn"</b> button in top right corner. This will only have a few learning steps done in the background.
                     <br>At this point you can observe the Graph below the Table, and already test the Neural Network by clicking on any Tables record and see if the output/prediction is anyway similar to expected output.
-                    <br>If current prediction is off, then keep clicking on that "Learn" button and test outputs, also observing as Prediction error decreases (hopefully).
+                    <br>If current prediction is off, then keep clicking that
+                    <b>"Learn"</b> button and test outputs, also observing as Prediction error decreases (hopefully).
                 </p>
             </section>
         </div>

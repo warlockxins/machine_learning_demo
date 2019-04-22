@@ -14,12 +14,11 @@
                     ref="dataTable"
                     v-on:testRecord="testRecord"
                     v-on:validationChange="canLearn = $event"
-                    :clickableRows="finishedLearning"
                 ></data-table>
 
                 <node-graph
-                    v-if="currentNetwork && currentNetwork.net"
-                    :network="currentNetwork.net"
+                    v-if="currentNetwork"
+                    :network="currentNetwork"
                     :predictions="predictions"
                     :error="predictionError"
                     ref="graph"
@@ -48,7 +47,6 @@ export default {
     },
     data: () => {
         return {
-            currentNetwork: undefined,
             progress: 0,
             isTraining: false,
             canLearn: false,
@@ -57,9 +55,20 @@ export default {
             predictionError: 0
         };
     },
+    computed: {
+        currentNetwork: function() {
+            try {
+                return new NeuralNetwork(
+                    this.$store.state.dataset,
+                    this.$store.getters.usedHeaders
+                );
+            } catch (error) {
+                return null;
+            }
+        }
+    },
     methods: {
         reset: function() {
-            this.currentNetwork = undefined;
             this.isTraining = false;
             this.finishedLearning = false;
             this.predictions = [];
@@ -72,26 +81,17 @@ export default {
 
             this.finishedLearning = false;
 
-            if (!this.currentNetwork) {
-                this.currentNetwork = new NeuralNetwork(
-                    this.$store.state.dataset,
-                    this.$store.getters.usedHeaders
-                );
-            }
-
             this.isTraining = true;
             this.progress = 0;
 
-            this.$nextTick(async () => {
-                await this.currentNetwork.train(progress => {
-                    this.progress = progress;
-                });
+            await this.currentNetwork.train(progress => {
+                this.progress = progress;
+            });
 
-                this.isTraining = false;
-                this.finishedLearning = true;
-                this.$nextTick(() => {
-                    this.$refs.graph.drawNetwork();
-                });
+            this.isTraining = false;
+            this.finishedLearning = true;
+            this.$nextTick(() => {
+                this.$refs.graph.drawNetwork();
             });
         },
         testRecord(record) {
