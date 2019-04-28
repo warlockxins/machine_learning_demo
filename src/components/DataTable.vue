@@ -4,7 +4,7 @@
             class="notification"
             :class="{'is-primary': errors.length === 0, 'is-danger': errors.length > 0}"
         >
-            <h3>Current data is {{errors.length === 0 ? "": "not"}} ready to Learn</h3>
+            <h3>Current data is{{errors.length === 0 ? " ": " not"}} ready to Learn</h3>
             <!-- errors -->
             <div class="content">
                 <ul class="list-group" v-if="errors.length">
@@ -14,63 +14,65 @@
         </div>
 
         <!-- data table -->
-        <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-                <tr>
-                    <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <div class="control">
-                            <label class="checkbox" :for="'use'+ header.name">
-                                <input
-                                    type="checkbox"
-                                    :id="'use'+ header.name"
-                                    @change="$store.commit('setHeaderUsedMutation', {index, use: !header.use})"
-                                    :checked="header.use"
-                                >
-                                {{ header.name }}
-                            </label>
-                        </div>
-                    </th>
-                </tr>
-                <!-- toggles for input/output -->
-                <tr>
-                    <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <input-radio
-                            v-if="header.use"
-                            :items="inputTypes"
-                            :value="header.isInput"
-                            @change="$store.commit('setHeaderIsInputMutation', {index, isInput: $event})"
-                            :name="header.name + 'inType'"
-                        ></input-radio>
-                    </th>
-                </tr>
-                <!-- toggles for numeric/lable -->
-                <tr>
-                    <th v-for="(header, index) in datasetHeaders" :key="index">
-                        <input-radio
-                            v-if="header.use"
-                            :items="valueTypes"
-                            :value="header.isNumber"
-                            @change="header.isNumber = $event"
-                            :name="header.name + 'valType'"
-                        ></input-radio>
-                    </th>
-                </tr>
-            </thead>
+        <div class="datatable">
+            <table class="table is-striped is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th v-for="(header, index) in datasetHeaders" :key="index">
+                            <div class="control">
+                                <label class="checkbox" :for="'use'+ header.name">
+                                    <input
+                                        type="checkbox"
+                                        :id="'use'+ header.name"
+                                        @change="$store.commit('setHeaderUsedMutation', {index, use: !header.use})"
+                                        :checked="header.use"
+                                    >
+                                    {{ header.name }}
+                                </label>
+                            </div>
+                        </th>
+                    </tr>
+                    <!-- toggles for input/output -->
+                    <tr>
+                        <th v-for="(header, index) in datasetHeaders" :key="index">
+                            <input-radio
+                                v-if="header.use"
+                                :items="inputTypes"
+                                :value="header.isInput"
+                                @change="$store.commit('setHeaderIsInputMutation', {index, isInput: $event})"
+                                :name="header.name + 'inType'"
+                            ></input-radio>
+                        </th>
+                    </tr>
+                    <!-- toggles for numeric/lable -->
+                    <tr>
+                        <th v-for="(header, index) in datasetHeaders" :key="index">
+                            <input-radio
+                                v-if="header.use"
+                                :items="valueTypes"
+                                :value="header.isNumber"
+                                @change="header.isNumber = $event"
+                                :name="header.name + 'valType'"
+                            ></input-radio>
+                        </th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr
-                    v-for="(row, index) in currentDataset"
-                    :key="index"
-                    v-on:click="$emit('testRecord', row)"
-                >
-                    <td
-                        v-for="(cell, cellIndex) in row"
-                        :key="cellIndex"
-                        :class="{'has-text-grey-lighter': !datasetHeaders[cellIndex].use }"
-                    >{{ cell }}</td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr
+                        v-for="(row, index) in currentDataset"
+                        :key="index"
+                        v-on:click="$emit('testRecord', row)"
+                    >
+                        <td
+                            v-for="(cell, cellIndex) in row"
+                            :key="cellIndex"
+                            :class="{'has-text-grey-lighter': !datasetHeaders[cellIndex].use }"
+                        >{{ cell }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <nav aria-label="Page navigation" class="pagination" role="navigation">
             <a

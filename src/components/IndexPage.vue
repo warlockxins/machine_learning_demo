@@ -129,22 +129,20 @@ export default {
         }
     },
     beforeDestroy() {
-        const { fileDrop } = this.$refs;
-        fileDrop.removeEventListener("drop", this.dropEvent);
+        this.$refs.fileDrop.removeEventListener("drop", this.dropEvent);
     },
     methods: {
         dropEvent(e) {
             const files = e.target.files || e.dataTransfer.files;
-            if (!files.length) return;
-            this.onFileChanged(files[0]);
+            files.length && this.onFileChanged(files[0]);
         },
         onFileInput(ev) {
-            if (ev.target.files) {
-                this.onFileChanged(ev.target.files[0]);
-            }
+            ev.target.files && this.onFileChanged(ev.target.files[0]);
         },
         onFileChanged(file) {
-            this.$store.dispatch("createDatasetFromFile", file);
+            if (file.type === "text/csv") {
+                this.$store.dispatch("createDatasetFromFile", file);
+            }
         },
         isDragAndDropCapable() {
             const { fileDrop } = this.$refs;

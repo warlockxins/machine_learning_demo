@@ -6,7 +6,7 @@
             <div class="container data-container" v-if="$store.state.dataset">
                 <progress
                     v-if="isTraining"
-                    class="progress is-info"
+                    class="progress is-info progress_fixed"
                     :value="progress"
                     max="100"
                 >{{progress}}</progress>
@@ -36,7 +36,7 @@ import HeaderNavigation from "./components/HeaderNavigation";
 import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
 import IndexPageComponent from "./components/IndexPage";
-import NeuralNetwork from "./utils/neuralNet";
+import NeuralNetwork from "./utils/NeuralNetwork";
 import { IS_INPUT } from "./utils/constants";
 
 export default {
@@ -52,7 +52,6 @@ export default {
             progress: 0,
             isTraining: false,
             canLearn: false,
-            finishedLearning: false,
             predictions: [],
             predictionError: 0,
             testRecordData: []
@@ -73,16 +72,14 @@ export default {
     methods: {
         reset: function() {
             this.isTraining = false;
-            this.finishedLearning = false;
             this.predictions = [];
             this.predictionError = 0;
+            this.testRecordData = [];
         },
         startLearning: async function() {
             if (!this.canLearn || this.isTraining) {
                 return;
             }
-
-            this.finishedLearning = false;
 
             this.isTraining = true;
             this.progress = 0;
@@ -92,10 +89,7 @@ export default {
             });
 
             this.isTraining = false;
-            this.finishedLearning = true;
-            this.$nextTick(() => {
-                this.$refs.graph.drawNetwork();
-            });
+            this.$refs.graph.drawNetwork();
         },
         testRecord(record) {
             const { results, error } = this.currentNetwork.predictRecord(
@@ -108,7 +102,10 @@ export default {
             this.testRecordData = this.$store.getters.usedHeaders.reduce(
                 (inputs, item) => {
                     if (item.isInput === IS_INPUT) {
-                        inputs.push(record[item.index]);
+                        inputs.push({
+                            name: item.name,
+                            value: record[item.index]
+                        });
                     }
                     return inputs;
                 },

@@ -3,15 +3,23 @@ html {
     min-height: 100%;
 }
 
-.progress {
+.progress_fixed {
     position: fixed;
     z-index: 1;
     bottom: 0;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px) !important;
 }
 
 .data-container {
     padding-top: 40px;
     padding-bottom: 40px;
+}
+
+/* ---- */
+.datatable {
+    overflow-x: auto;
 }
 /* display node  */
 
@@ -32,6 +40,11 @@ html {
     font-weight: bold;
     min-width: 100px;
     position: relative;
+}
+
+.node-graph__row .field-label {
+    width: 100px;
+    overflow: hidden;
 }
 
 .node-graph .node-graph__row::after {

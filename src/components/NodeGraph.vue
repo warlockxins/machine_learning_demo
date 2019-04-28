@@ -1,48 +1,66 @@
 <template>
-    <table class="box node-graph">
-        <thead>
-            <tr>
-                <td>Inputs</td>
-                <td>Neural Network</td>
-                <td>Outputs with Error {{ Math.ceil(error * 10000)/100 }}%</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div
-                        v-for="(item, key) in record"
-                        :key="key"
-                        class="node-graph__row node-graph__row_right"
-                    >
-                        <input
-                            class="input"
-                            type="text"
-                            placeholder="Text input"
-                            :value="item"
-                            disabled
+    <div class="box node-graph">
+        <table>
+            <thead>
+                <tr>
+                    <td>Inputs</td>
+                    <td>Neural Network</td>
+                    <td>Outputs with Error {{ Math.ceil(error * 10000)/100 }}%</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div
+                            v-for="(item, key) in record"
+                            :key="key"
+                            class="node-graph__row node-graph__row_right"
                         >
-                    </div>
-                </td>
-                <td>
-                    <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
-                </td>
-                <td>
-                    <div
-                        v-for="(item, key) in predictions"
-                        :key="key"
-                        class="node-graph__row node-graph__row_left"
-                    >
-                        <span
-                            v-if="(item instanceof Object)"
-                            :style="{opacity: valueOpacity(item.value)}"
-                        >{{ item.key }}: {{ item.value }}</span>
-                        <span v-else>{{ item }}</span>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                            <!-- simple form field -->
+                            <div class="field is-horizontal">
+                                <div class="field-label is-small">
+                                    <label class="label">{{item.name}}</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <input
+                                                class="input"
+                                                type="text"
+                                                placeholder="Text input"
+                                                :value="item.value"
+                                                disabled
+                                            >
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End simple form field -->
+                        </div>
+                    </td>
+                    <td>
+                        <canvas ref="canvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                    </td>
+                    <td>
+                        <div
+                            v-for="(item, key) in predictions"
+                            :key="key"
+                            class="node-graph__row node-graph__row_left"
+                        >
+                            <span
+                                v-if="(item instanceof Object)"
+                                :style="{opacity: valueOpacity(item.value)}"
+                            >
+                                {{ item.key }}:
+                                {{ Math.ceil(item.value * 1000)/1000 }}
+                            </span>
+                            <span v-else>{{ Math.ceil(item * 1000)/1000 }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
