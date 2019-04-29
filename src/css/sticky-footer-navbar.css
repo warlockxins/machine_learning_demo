@@ -3,6 +3,11 @@ html {
     min-height: 100%;
 }
 
+.reset-icon {
+    width: 15px;
+    height: 15px;
+}
+
 .hero-brain {
     max-width: 150px;
     max-height: 150px;

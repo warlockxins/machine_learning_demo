@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="hero is-small is-dark">
+        <section class="hero is-small is-dark is-bold">
             <div class="container">
                 <div class="hero-body has-text-centered">
                     <img class="hero-brain" src="@/assets/brain-logo.png" alt="Teach your model">

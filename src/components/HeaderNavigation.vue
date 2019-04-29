@@ -4,7 +4,7 @@
             <div class="navbar-brand">
                 <a class="navbar-item">
                     <img src="@/assets/header-logo.png">
-                    Machine Learning
+                    Neuro Buddy
                 </a>
                 <a
                     v-if="$store.state.dataset"
@@ -31,7 +31,7 @@
                 <div class="navbar-start">
                     <a class="navbar-item" href="#" type="button" v-on:click="reset">
                         <span class="icon has-text-primary">
-                            <img src="@/assets/rotate-ccw.svg">
+                            <img class="reset-icon" src="@/assets/rotate-ccw.svg">
                         </span>
                         <span href="#">Clear Dataset</span>
                     </a>
