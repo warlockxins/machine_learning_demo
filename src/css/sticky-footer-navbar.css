@@ -3,6 +3,12 @@ html {
     min-height: 100%;
 }
 
+.hero-brain {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+}
+
 .progress_fixed {
     position: fixed;
     z-index: 1;

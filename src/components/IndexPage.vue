@@ -1,31 +1,34 @@
 <template>
     <div>
-        <section class="hero is-medium is-light">
+        <section class="hero is-small is-dark">
             <div class="container">
-                <div class="hero-body columns">
-                    <div class="column">
-                        <h1 class="title">Machine Learning</h1>
-                        <h2 class="subtitle">A simple Neural Network in action</h2>
-                    </div>
-                    <div class="column">
-                        <div class="field" id="upload_field">
-                            <div class="file is-large is-boxed is-centered" ref="fileDrop">
-                                <label class="file-label">
-                                    <input
-                                        class="file-input"
-                                        type="file"
-                                        name="resume"
-                                        v-on:change="onFileInput"
-                                    >
-                                    <span class="file-cta">
-                                        <span class="file-icon">
-                                            <img src="@/assets/upload.svg">
-                                        </span>
-                                        <span class="file-label">Upload Your .CSV data</span>
-                                        <span class="file-label">200 KB MAX</span>
+                <div class="hero-body has-text-centered">
+                    <img class="hero-brain" src="@/assets/brain-logo.png" alt="Teach your model">
+                    <h1 class="title">Neuro Buddy</h1>
+                    <h2
+                        class="subtitle"
+                    >Artificial Intelligence fundamentals with a simplified Neural Network dashboard.</h2>
+
+                    <div class="field" id="upload_field">
+                        <div class="file is-large is-centered" ref="fileDrop">
+                            <label class="file-label">
+                                <input
+                                    class="file-input"
+                                    type="file"
+                                    name="resume"
+                                    v-on:change="onFileInput"
+                                >
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <img src="@/assets/upload.svg">
                                     </span>
-                                </label>
-                            </div>
+                                    <span class="file-label">
+                                        Upload Your &nbsp;
+                                        <b>CSV data</b>,
+                                    </span>
+                                    <span class="file-label">200 KB MAX</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -41,7 +44,7 @@
                     <b>Machine learning</b>, what is
                     <b>Neural Network</b>?
                 </p>
-                <p>These days we hear all about fancy face recognition technologies, or impressive Artificial intelligence for dog and human like robots. So is is hard to understand how all of it really works.</p>
+                <p>These days we hear all about face recognition technologies, or impressive Artificial intelligence for dog and human like robots. So is is hard to understand how all of it really works.</p>
                 <p>
                     Most of current
                     <b>Machine learning</b> tutorials are also centered around coding in
@@ -64,11 +67,11 @@
                     <b>following example</b>.
                 </p>
                 <p>
-                    The traditional dataset to train on is
+                    The traditional data set to train on is
                     <a
                         rel="nofollow"
                         href="https://en.wikipedia.org/wiki/Iris_flower_data_set"
-                    >Iris flower dataset</a>. Its relevant data is available in CSV format
+                    >Iris flower data set</a>. Its relevant data is available in CSV format
                     <a
                         rel="nofollow"
                         href="/test-data/iris.csv"
@@ -78,7 +81,7 @@
                 <br>
                 <h4 class="title is-4">The Learning</h4>
                 <p>
-                    Once the dataset is decided, it's time to put it to test.
+                    Once the data set is decided, it's time to put it to test.
                     <a
                         href="#upload_field"
                     >Upload the csv by dropping it on the box</a> waay up - here we'll use the
@@ -95,7 +98,8 @@
 
                 <p>
                     Now when the data is setup, press
-                    <b>"Learn"</b> button in top right corner. This will only have a few learning steps done in the background.
+                    <b>"Learn"</b>
+                    button in top right corner. This will only have a few learning steps done in the background.
                     <br>At this point you can observe the Graph below the Table, and already test the Neural Network by clicking on any Tables record and see if the output/prediction is anyway similar to expected output.
                     <br>If current prediction is off, then keep clicking that
                     <b>"Learn"</b> button and test outputs, also observing as Prediction error decreases (hopefully).

@@ -23,6 +23,7 @@
                     :predictions="predictions"
                     :error="predictionError"
                     ref="graph"
+                    @recordChanged="recordChanged"
                 ></node-graph>
             </div>
             <index-page-component v-else></index-page-component>
@@ -54,7 +55,8 @@ export default {
             canLearn: false,
             predictions: [],
             predictionError: 0,
-            testRecordData: []
+            testRecordData: [],
+            tempRecord: []
         };
     },
     computed: {
@@ -92,6 +94,8 @@ export default {
             this.$refs.graph.drawNetwork();
         },
         testRecord(record) {
+            this.tempRecord = record;
+
             const { results, error } = this.currentNetwork.predictRecord(
                 record
             );
@@ -111,7 +115,8 @@ export default {
                 },
                 []
             );
-        }
+        },
+        recordChanged($event) {}
     }
 };
 </script>
