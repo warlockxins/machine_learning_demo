@@ -26,7 +26,7 @@
                                         Upload Your &nbsp;
                                         <b>CSV data</b>,
                                     </span>
-                                    <span class="file-label">200 KB MAX</span>
+                                    <span class="file-label">300 KB MAX</span>
                                 </span>
                             </label>
                         </div>
@@ -77,6 +77,29 @@
                         href="/test-data/iris.csv"
                     >Here</a> (right click and download).
                 </p>
+
+                <p>
+                    Please make sure that you
+                    <b>
+                        data file
+                        starts with
+                    </b> defining
+                    <b>column headers</b>.
+                </p>
+                <p>Please get inspired by following data sources:</p>
+                <div class="content">
+                    <ul>
+                        <li>
+                            <a
+                                rel="nofollow"
+                                href="https://machinelearningmastery.com/standard-machine-learning-datasets/"
+                            >machinelearningmastery.com</a>
+                        </li>
+                        <li>
+                            <a rel="nofollow" href="https://www.kaggle.com/datasets">kaggle.com</a>
+                        </li>
+                    </ul>
+                </div>
 
                 <br>
                 <h4 class="title is-4">The Learning</h4>

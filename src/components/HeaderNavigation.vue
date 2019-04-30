@@ -4,7 +4,7 @@
             <div class="navbar-brand">
                 <a class="navbar-item">
                     <img src="@/assets/header-logo.png">
-                    Neuro Buddy
+                    Neuro Buddy v-{{ version }}
                 </a>
                 <a
                     v-if="$store.state.dataset"
@@ -55,11 +55,14 @@
 </template>
 
 <script>
+import { version } from "../../package.json";
+
 export default {
     name: "header-navigation",
     props: ["canLearn"],
     data: function() {
         return {
+            version: version,
             menuExpanded: true
         };
     },
