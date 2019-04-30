@@ -5,8 +5,8 @@
     "description": "parse and use csv files, then use machine learning to predict data. Display resulting net values in a graph",
     "main": "index.js",
     "scripts": {
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build --dest docs",
+        "serve": "NODE_ENV=dev vue-cli-service serve",
+        "build": "NODE_ENV=production vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
     "repository": {
