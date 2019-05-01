@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import "./css/sticky-footer-navbar.css";
 import HeaderNavigation from "./components/HeaderNavigation";
 import DataTable from "./components/DataTable";
 import NodeGraph from "./components/NodeGraph";
@@ -90,8 +89,11 @@ export default {
                 this.progress = progress;
             });
 
-            this.isTraining = false;
-            this.$refs.graph.drawNetwork();
+            this.progress = 100;
+            setTimeout(() => {
+                this.isTraining = false;
+                this.$refs.graph.drawNetwork();
+            }, 300);
         },
         testRecord(record) {
             this.tempRecord = record;
@@ -107,6 +109,7 @@ export default {
                 (inputs, item) => {
                     if (item.isInput === IS_INPUT) {
                         inputs.push({
+                            index: item.index,
                             name: item.name,
                             value: record[item.index]
                         });
@@ -116,7 +119,11 @@ export default {
                 []
             );
         },
-        recordChanged($event) {}
+        recordChanged(newRecord) {
+            let rec = { ...this.tempRecord };
+            rec[newRecord.index] = newRecord.value;
+            this.testRecord(rec);
+        }
     }
 };
 </script>

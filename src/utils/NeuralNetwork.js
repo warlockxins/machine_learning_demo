@@ -108,7 +108,7 @@ export default class NeuralNetwork {
 
             setTimeout(() => {
                 resolveChunk();
-            }, 50);
+            }, 5);
         });
     }
 

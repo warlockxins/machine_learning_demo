@@ -29,8 +29,7 @@
                                                 type="text"
                                                 placeholder="Text input"
                                                 :value="item.value"
-                                                disabled
-                                                @input="$emit('recordChanged', {index: key, value: $event.target.value })"
+                                                @input="$emit('recordChanged', {index: item.index, value: $event.target.value })"
                                             >
                                         </p>
                                     </div>

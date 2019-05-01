@@ -3,6 +3,7 @@ import App from "./App.vue";
 import store from "./store";
 
 import "bulma/css/bulma.min.css";
+import "./css/sticky-footer-navbar.css";
 
 Vue.config.productionTip = false;
 
