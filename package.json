@@ -1,7 +1,7 @@
 {
     "name": "machine_learning_demo",
     "sideEffects": false,
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "parse and use csv files, then use machine learning to predict data. Display resulting net values in a graph",
     "main": "index.js",
     "scripts": {
