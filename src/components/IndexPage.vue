@@ -74,7 +74,7 @@
                     >Iris flower data set</a>. Its relevant data is available in CSV format
                     <a
                         rel="nofollow"
-                        href="/test-data/iris.csv"
+                        href="test-data/iris.csv"
                     >Here</a> (right click and download).
                 </p>
 
@@ -110,7 +110,7 @@
                     >Upload the csv by dropping it on the box</a> waay up - here we'll use the
                     <a
                         rel="nofollow"
-                        href="/test-data/iris.csv"
+                        href="test-data/iris.csv"
                     >Iris CSV</a>. On the new screen you will see CSVs data, and notice that in the presented table you should select specific coulumns as
                     <b>output/label</b> as displayed below.
                 </p>

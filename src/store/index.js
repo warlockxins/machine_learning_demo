@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import Papa from "papaparse";
 
 import { MAX_FILE_SIZE } from "../utils/constants.js";
-import { TableHeader } from "../utils/TableHeader";
+import { TableColumn } from "../utils/TableColumn";
 import { IS_INPUT } from "../utils/constants";
 
 Vue.use(Vuex);
@@ -59,6 +59,6 @@ export default new Vuex.Store({
 
 const createDatasetHeaders = dataset => {
     return dataset[0].map(
-        (name, index) => new TableHeader(name, true, IS_INPUT, true, index)
+        (name, index) => new TableColumn(name, true, IS_INPUT, true, index)
     );
 };

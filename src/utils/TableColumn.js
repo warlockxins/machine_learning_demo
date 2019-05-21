@@ -1,4 +1,4 @@
-export class TableHeader {
+export class TableColumn {
     constructor(name, use, isInput, isNumber, index) {
         this.name = name;
         this.use = use;
